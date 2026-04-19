@@ -1,0 +1,97 @@
+# jciyuan-spider 配置文件
+# 囧次元动漫爬虫 - 企业级配置
+
+# 爬虫基础配置
+spider:
+  # 目标站点
+  base_url: "https://www.jciyuan.com"
+  
+  # 请求间隔（毫秒）
+  delay: 1000
+  
+  # 超时时间（秒）
+  timeout: 10
+  
+  # 最大重试次数
+  max_retry: 3
+  
+  # 并发数
+  concurrency: 3
+
+# 反爬配置
+anticrawler:
+  # 是否启用代理
+  enable_proxy: false
+  
+  # 代理列表
+  proxies:
+    - ""
+  
+  # 是否随机User-Agent
+  random_ua: true
+  
+  # User-Agent列表
+  user_agents:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  
+  # 是否保持Cookie
+  keep_cookie: true
+
+# 爬取配置
+crawl:
+  # 默认爬取的动漫ID
+  anime_id: 37439
+  
+  # 是否启用断点续爬
+  resume: true
+  
+  # 增量更新（只爬最新集）
+  incremental: false
+  
+  # 最大爬取集数（0=全部）
+  max_episodes: 0
+
+# 存储配置
+storage:
+  # 输出目录
+  output_dir: "./output"
+  
+  # 是否保存JSON
+  save_json: true
+  
+  # 是否保存到SQLite
+  save_sqlite: false
+  
+  # SQLite数据库路径
+  db_path: "./data/spider.db"
+  
+  # 是否保存m3u8播放列表
+  save_m3u8: false
+
+# 日志配置
+log:
+  # 日志级别: debug, info, warn, error
+  level: "info"
+  
+  # 日志文件路径
+  file: "./logs/spider.log"
+  
+  # 是否输出到控制台
+  console: true
+  
+  # 日志文件最大大小（MB）
+  max_size: 10
+  
+  # 保留的旧日志文件数
+  max_backups: 5
+
+# 统计配置
+stats:
+  # 是否启用统计
+  enabled: true
+  
+  # 统计间隔（秒）
+  interval: 30
