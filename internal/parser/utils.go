@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
-	"unicode"
 )
 
 // extractString 正则提取字符串
@@ -70,12 +69,3 @@ func uniqueStrings(ss []string) []string {
 	return result
 }
 
-// isChinese 判断是否包含中文
-func isChinese(s string) bool {
-	for _, r := range s {
-		if unicode.Is(unicode.Scripts["Han"], r) {
-			return true
-		}
-	}
-	return false
-}
