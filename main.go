@@ -124,7 +124,7 @@ func defaultConfig() *model.Config {
 	return &model.Config{
 		Spider: model.SpiderConfig{
 			BaseURL: "https://www.jciyuan.com",
-			Delay:   1000, Timeout: 10, MaxRetry: 3, Concurrency: 3,
+			Delay:   1000, Timeout: 10, MaxRetry: 3,
 		},
 		Anticrawler: model.AnticrawlerConfig{
 			RandomUA:   true,

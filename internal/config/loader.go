@@ -55,26 +55,14 @@ func (l *Loader) applyDefaults(cfg *model.Config) {
 	if cfg.Spider.MaxRetry == 0 {
 		cfg.Spider.MaxRetry = 3
 	}
-	if cfg.Spider.Concurrency == 0 {
-		cfg.Spider.Concurrency = 3
-	}
 	if len(cfg.Anticrawler.UserAgents) == 0 {
 		cfg.Anticrawler.UserAgents = defaultUserAgents()
 	}
 	if cfg.Storage.OutputDir == "" {
 		cfg.Storage.OutputDir = "./output"
 	}
-	if cfg.Storage.DBPath == "" {
-		cfg.Storage.DBPath = "./data/spider.db"
-	}
 	if cfg.Log.Level == "" {
 		cfg.Log.Level = "info"
-	}
-	if cfg.Log.MaxSize == 0 {
-		cfg.Log.MaxSize = 10
-	}
-	if cfg.Log.MaxBackups == 0 {
-		cfg.Log.MaxBackups = 5
 	}
 }
 
@@ -91,9 +79,6 @@ func (l *Loader) validate(cfg *model.Config) error {
 	}
 	if cfg.Spider.MaxRetry < 0 {
 		return fmt.Errorf("max_retry 不能为负数")
-	}
-	if cfg.Spider.Concurrency < 1 {
-		return fmt.Errorf("concurrency 不能小于 1")
 	}
 	return nil
 }

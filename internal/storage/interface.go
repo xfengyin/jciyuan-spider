@@ -3,6 +3,9 @@ package storage
 
 import "jciyuan-spider-v2/internal/model"
 
+// 注：单一实现但保留接口以支持 DI 和未来扩展。
+// 当前实现：MemoryStorage / JSONStorage
+
 // Storage 持久化存储接口
 type Storage interface {
 	// Save 保存动漫信息
