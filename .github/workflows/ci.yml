@@ -19,7 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: ["1.21", "1.22"]
+        # 与 go.mod 保持一致，避免工具链自动降级/升级带来的不确定性
+        go-version: ["1.25"]
 
     steps:
       # 检出代码
