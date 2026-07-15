@@ -20,7 +20,15 @@ import (
 	"jciyuan-spider-v2/internal/spider"
 )
 
+// 版本信息，由 CI / GoReleaser 通过 -ldflags 注入。
 var (
+	version = "dev"
+	commit  = "unknown"
+	date    = "unknown"
+)
+
+var (
+	versionFlag = flag.Bool("version", false, "打印版本信息")
 	configPath  = flag.String("config", "config/config.yaml", "配置文件路径")
 	animeIDFlag = flag.Int64("id", 0, "动漫ID")
 	delayFlag   = flag.Int("delay", 0, "请求间隔(毫秒)")
@@ -33,6 +41,11 @@ var (
 
 func main() {
 	flag.Parse()
+
+	if *versionFlag {
+		fmt.Printf("jciyuan-spider-v3 %s (commit: %s, built: %s)\n", version, commit, date)
+		os.Exit(0)
+	}
 
 	cfg, err := loadConfig()
 	if err != nil {

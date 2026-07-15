@@ -1,0 +1,63 @@
+# CI 工作流：在 PR 与 main 分支推送时执行构建、静态检查与单元测试
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+
+jobs:
+  lint-build-test:
+    name: Lint / Build / Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ["1.21", "1.22"]
+
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 设置 Go 环境
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache: true
+
+      # 下载依赖
+      - name: Download dependencies
+        run: go mod download
+
+      # 静态检查
+      - name: Run go vet
+        run: go vet ./...
+
+      # 构建全平台（测试交叉编译能力，关闭 CGO 以保持与 Release 一致）
+      - name: Build all platforms
+        env:
+          CGO_ENABLED: "0"
+        run: |
+          GOOS=linux   GOARCH=amd64 go build -o dist/jciyuan-spider-linux-amd64   .
+          GOOS=darwin  GOARCH=amd64 go build -o dist/jciyuan-spider-darwin-amd64  .
+          GOOS=windows GOARCH=amd64 go build -o dist/jciyuan-spider-windows-amd64.exe .
+
+      # 单元测试
+      - name: Run unit tests
+        run: go test -race -cover ./...
+
+      # 上传构建产物（便于调试）
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.go-version }}
+          path: dist/*
+          retention-days: 3
