@@ -1,9 +1,10 @@
-// Package config - 配置加载模块
+// Package config 负责配置加载、默认值应用、环境变量覆盖与基础校验。
 package config
 
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"jciyuan-spider-v2/internal/model"
 
@@ -43,8 +44,21 @@ func (l *Loader) Load() (*model.Config, error) {
 
 // applyDefaults 应用默认值
 func (l *Loader) applyDefaults(cfg *model.Config) {
+	if cfg.App.Name == "" {
+		cfg.App.Name = "jciyuan-spider-v3"
+	}
+	if cfg.App.Mode == "" {
+		cfg.App.Mode = "cli"
+	}
+	if cfg.App.TraceIDHeader == "" {
+		cfg.App.TraceIDHeader = "X-Request-ID"
+	}
+
 	if cfg.Spider.BaseURL == "" {
 		cfg.Spider.BaseURL = "https://www.jciyuan.com"
+	}
+	if cfg.Spider.DetailURLPattern == "" {
+		cfg.Spider.DetailURLPattern = "{{base_url}}/acgdetail/{{id}}.html"
 	}
 	if cfg.Spider.Delay == 0 {
 		cfg.Spider.Delay = 1000
@@ -55,14 +69,101 @@ func (l *Loader) applyDefaults(cfg *model.Config) {
 	if cfg.Spider.MaxRetry == 0 {
 		cfg.Spider.MaxRetry = 3
 	}
+	if cfg.Spider.Concurrency == 0 {
+		cfg.Spider.Concurrency = 3
+	}
+	if cfg.Spider.QueueSize == 0 {
+		cfg.Spider.QueueSize = 100
+	}
+
+	if cfg.Fetcher.Type == "" {
+		cfg.Fetcher.Type = "http"
+	}
+	if cfg.Fetcher.HTTP.Timeout == 0 {
+		cfg.Fetcher.HTTP.Timeout = cfg.Spider.Timeout
+	}
+	if cfg.Fetcher.HTTP.MaxRetry == 0 {
+		cfg.Fetcher.HTTP.MaxRetry = cfg.Spider.MaxRetry
+	}
+	if cfg.Fetcher.HTTP.MaxBodySize == 0 {
+		cfg.Fetcher.HTTP.MaxBodySize = 50 * 1024 * 1024
+	}
+	if cfg.Fetcher.HTTP.Transport.MaxIdleConns == 0 {
+		cfg.Fetcher.HTTP.Transport.MaxIdleConns = 100
+	}
+	if cfg.Fetcher.HTTP.Transport.MaxConnsPerHost == 0 {
+		cfg.Fetcher.HTTP.Transport.MaxConnsPerHost = 10
+	}
+	if cfg.Fetcher.HTTP.Transport.IdleConnTimeout == 0 {
+		cfg.Fetcher.HTTP.Transport.IdleConnTimeout = 90 * time.Second
+	}
+	if cfg.Fetcher.HTTP.Transport.TLSHandshakeTimeout == 0 {
+		cfg.Fetcher.HTTP.Transport.TLSHandshakeTimeout = 10 * time.Second
+	}
+	if cfg.Fetcher.Proxy.Strategy == "" {
+		cfg.Fetcher.Proxy.Strategy = "round_robin"
+	}
+	if cfg.Fetcher.CircuitBreaker.FailureThreshold == 0 {
+		cfg.Fetcher.CircuitBreaker.FailureThreshold = 5
+	}
+	if cfg.Fetcher.CircuitBreaker.ErrorRateThreshold == 0 {
+		cfg.Fetcher.CircuitBreaker.ErrorRateThreshold = 0.5
+	}
+	if cfg.Fetcher.CircuitBreaker.WindowSize == 0 {
+		cfg.Fetcher.CircuitBreaker.WindowSize = 10
+	}
+	if cfg.Fetcher.CircuitBreaker.OpenDuration == 0 {
+		cfg.Fetcher.CircuitBreaker.OpenDuration = 30 * time.Second
+	}
+	if cfg.Fetcher.CircuitBreaker.HalfOpenRequests == 0 {
+		cfg.Fetcher.CircuitBreaker.HalfOpenRequests = 1
+	}
+
+	if cfg.Parser.Type == "" {
+		cfg.Parser.Type = "html"
+	}
+	if cfg.Parser.HTML.Encoding == "" {
+		cfg.Parser.HTML.Encoding = "auto"
+	}
+
+	if cfg.Storage.Type == "" {
+		cfg.Storage.Type = "json"
+	}
+	if cfg.Storage.JSON.OutputDir == "" {
+		cfg.Storage.JSON.OutputDir = "./output"
+	}
+	if cfg.Storage.SQLite.DSN == "" {
+		cfg.Storage.SQLite.DSN = "./data/spider.db"
+	}
+
 	if len(cfg.Anticrawler.UserAgents) == 0 {
 		cfg.Anticrawler.UserAgents = defaultUserAgents()
 	}
-	if cfg.Storage.OutputDir == "" {
-		cfg.Storage.OutputDir = "./output"
+	if cfg.Anticrawler.RefererPolicy == "" {
+		cfg.Anticrawler.RefererPolicy = cfg.Spider.BaseURL + "/"
 	}
+
 	if cfg.Log.Level == "" {
 		cfg.Log.Level = "info"
+	}
+	if cfg.Log.Format == "" {
+		cfg.Log.Format = "text"
+	}
+	if cfg.Log.MaxSize == 0 {
+		cfg.Log.MaxSize = 10
+	}
+	if cfg.Log.MaxBackups == 0 {
+		cfg.Log.MaxBackups = 5
+	}
+
+	if cfg.Metrics.Backend == "" {
+		cfg.Metrics.Backend = "memory"
+	}
+	if cfg.Metrics.Prometheus.Port == 0 {
+		cfg.Metrics.Prometheus.Port = 9090
+	}
+	if cfg.Metrics.Prometheus.Path == "" {
+		cfg.Metrics.Prometheus.Path = "/metrics"
 	}
 }
 
@@ -79,6 +180,18 @@ func (l *Loader) validate(cfg *model.Config) error {
 	}
 	if cfg.Spider.MaxRetry < 0 {
 		return fmt.Errorf("max_retry 不能为负数")
+	}
+	if cfg.Spider.Concurrency < 1 {
+		return fmt.Errorf("concurrency 至少为 1")
+	}
+	if cfg.Fetcher.Type == "" {
+		return fmt.Errorf("fetcher.type 不能为空")
+	}
+	if cfg.Parser.Type == "" {
+		return fmt.Errorf("parser.type 不能为空")
+	}
+	if cfg.Storage.Type == "" {
+		return fmt.Errorf("storage.type 不能为空")
 	}
 	return nil
 }
@@ -104,7 +217,18 @@ func LoadFromEnv(cfg *model.Config) {
 			cfg.Spider.Delay = d
 		}
 	}
+	if timeout := os.Getenv("JCIYUAN_TIMEOUT"); timeout != "" {
+		var t int
+		fmt.Sscanf(timeout, "%d", &t)
+		if t > 0 {
+			cfg.Spider.Timeout = t
+			cfg.Fetcher.HTTP.Timeout = t
+		}
+	}
 	if ua := os.Getenv("JCIYUAN_USER_AGENT"); ua != "" {
 		cfg.Anticrawler.UserAgents = []string{ua}
+	}
+	if backend := os.Getenv("JCIYUAN_METRICS_BACKEND"); backend != "" {
+		cfg.Metrics.Backend = backend
 	}
 }

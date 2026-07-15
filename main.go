@@ -1,16 +1,20 @@
-// jciyuan-spider-v2 - 企业级动漫爬虫
+// jciyuan-spider-v3 - 企业级动漫爬虫命令行入口。
 package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	"jciyuan-spider-v2/internal/config"
+	"jciyuan-spider-v2/internal/di"
+	"jciyuan-spider-v2/internal/health"
 	"jciyuan-spider-v2/internal/logger"
 	"jciyuan-spider-v2/internal/model"
 	"jciyuan-spider-v2/internal/spider"
@@ -18,7 +22,7 @@ import (
 
 var (
 	configPath  = flag.String("config", "config/config.yaml", "配置文件路径")
-	animeIDFlag = flag.Int64("id", 37439, "动漫ID")
+	animeIDFlag = flag.Int64("id", 0, "动漫ID")
 	delayFlag   = flag.Int("delay", 0, "请求间隔(毫秒)")
 	outputFlag  = flag.String("output", "", "输出目录")
 	resumeFlag  = flag.Bool("resume", false, "启用断点续爬")
@@ -30,17 +34,20 @@ var (
 func main() {
 	flag.Parse()
 
-	// 加载配置
 	cfg, err := loadConfig()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "配置加载失败: %v\n", err)
 		os.Exit(1)
 	}
-
 	applyFlags(cfg)
-	initLogger(cfg)
 
-	// 信号处理
+	log, err := logger.New(cfg.Log)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "初始化日志器失败: %v\n", err)
+		os.Exit(1)
+	}
+	defer func() { _ = log.Sync() }()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -48,48 +55,54 @@ func main() {
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
 		<-sigChan
-		logger.Info("收到中断信号，正在优雅退出...")
+		log.Info("收到中断信号，正在优雅退出...")
 		cancel()
 	}()
 
-	// 创建爬虫
-	s, err := spider.NewSpider(cfg)
+	traceID := generateTraceID()
+	ctx = logger.WithTraceID(ctx, traceID)
+	log = log.WithTraceID(traceID)
+
+	container := di.NewContainer(cfg)
+	s, err := container.BuildSpider(ctx)
 	if err != nil {
-		logger.Fatal("创建爬虫失败: %v", err)
+		log.Fatal("创建爬虫失败", logger.Err(err))
 	}
 	defer s.Close()
 
+	startTime := time.Now()
+	startHealthServer(ctx, cfg, log, s, startTime)
+
 	showBanner(cfg)
 
-	// 执行爬取
-	startTime := time.Now()
 	if err := s.Run(ctx); err != nil {
-		logger.Error("爬取失败: %v", err)
-		os.Exit(1)
+		if !errors.Is(err, context.Canceled) {
+			log.Error("爬取失败", logger.Err(err))
+			os.Exit(1)
+		}
+		log.Warn("爬取被取消", logger.Err(err))
 	}
 
 	if *statsFlag {
-		showStats(s, startTime)
+		showStats(s, startTime, log)
 	}
 
-	logger.Info("爬取完成!")
+	log.Info("爬取完成")
 }
 
+// loadConfig 从文件加载配置；若文件不存在则回退到默认配置，并应用环境变量覆盖。
 func loadConfig() (*model.Config, error) {
 	loader := config.NewLoader(*configPath)
 	cfg, err := loader.Load()
 	if err != nil {
-		// 配置文件不存在时使用默认配置
-		logger.Warn("配置文件不存在，使用默认配置: %v", err)
+		fmt.Fprintf(os.Stderr, "配置文件加载失败，使用默认配置: %v\n", err)
 		cfg = defaultConfig()
 	}
-
-	// 环境变量覆盖
 	config.LoadFromEnv(cfg)
-
 	return cfg, nil
 }
 
+// applyFlags 将命令行 flag 覆盖到配置对象。
 func applyFlags(cfg *model.Config) {
 	if *animeIDFlag > 0 {
 		cfg.Crawl.AnimeID = *animeIDFlag
@@ -98,7 +111,7 @@ func applyFlags(cfg *model.Config) {
 		cfg.Spider.Delay = *delayFlag
 	}
 	if *outputFlag != "" {
-		cfg.Storage.OutputDir = *outputFlag
+		cfg.Storage.JSON.OutputDir = *outputFlag
 	}
 	if *resumeFlag {
 		cfg.Crawl.Resume = true
@@ -111,51 +124,124 @@ func applyFlags(cfg *model.Config) {
 	}
 }
 
-func initLogger(cfg *model.Config) {
-	logger.SetLevel(cfg.Log.Level)
-	if cfg.Log.File != "" {
-		if err := logger.SetFile(cfg.Log.File); err != nil {
-			fmt.Fprintf(os.Stderr, "设置日志文件失败: %v\n", err)
-		}
-	}
-}
-
+// defaultConfig 返回命令行入口的默认配置，保证无配置文件时仍可运行。
 func defaultConfig() *model.Config {
 	return &model.Config{
+		App: model.AppConfig{
+			Name:          "jciyuan-spider-v3",
+			Mode:          "cli",
+			TraceIDHeader: "X-Request-ID",
+		},
 		Spider: model.SpiderConfig{
-			BaseURL: "https://www.jciyuan.com",
-			Delay:   1000, Timeout: 10, MaxRetry: 3,
+			BaseURL:          "https://www.jciyuan.com",
+			DetailURLPattern: "{{base_url}}/acgdetail/{{id}}.html",
+			Delay:            1000,
+			Timeout:          10,
+			MaxRetry:         3,
+			Concurrency:      3,
+			QueueSize:        100,
 		},
 		Anticrawler: model.AnticrawlerConfig{
 			RandomUA:   true,
 			KeepCookie: true,
 			UserAgents: []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
 		},
-		Crawl:   model.CrawlConfig{AnimeID: 37439, Resume: true},
-		Storage: model.StorageConfig{OutputDir: "./output", SaveJSON: true},
-		Log:     model.LogConfig{Level: "info", Console: true},
+		Fetcher: model.FetcherConfig{
+			Type: "http",
+			HTTP: model.HTTPFetcherConfig{
+				Timeout:         10,
+				MaxRetry:        3,
+				FollowRedirects: true,
+				MaxBodySize:     50 * 1024 * 1024,
+			},
+		},
+		Parser: model.ParserConfig{
+			Type: "html",
+			HTML: model.HTMLParserConfig{Encoding: "auto"},
+		},
+		Storage: model.StorageConfig{
+			Type: "json",
+			JSON: model.JSONStorageConfig{OutputDir: "./output"},
+			Output: model.OutputConfig{
+				SaveJSON: true,
+			},
+		},
+		Crawl: model.CrawlConfig{
+			AnimeID: 37439,
+			Resume:  true,
+		},
+		Metrics: model.MetricsConfig{
+			Enabled: true,
+			Backend: "memory",
+		},
+		Log: model.LogConfig{
+			Level:   "info",
+			Format:  "text",
+			Console: true,
+		},
 	}
 }
 
+// generateTraceID 生成一条简单的全链路 Trace ID。
+func generateTraceID() string {
+	return fmt.Sprintf("%d-%d", time.Now().UnixNano(), rand.Int63())
+}
+
+// showBanner 打印启动横幅。
 func showBanner(cfg *model.Config) {
 	fmt.Println("")
 	fmt.Println("╔════════════════════════════════════════════════════════════╗")
-	fmt.Println("║   jciyuan-spider v2.0 企业级动漫爬虫                      ║")
+	fmt.Println("║   jciyuan-spider v3.0 企业级动漫爬虫                       ║")
 	fmt.Println("╚════════════════════════════════════════════════════════════╝")
 	fmt.Printf("目标站点: %s | 动漫ID: %d | 间隔: %dms | 重试: %d次\n",
 		cfg.Spider.BaseURL, cfg.Crawl.AnimeID, cfg.Spider.Delay, cfg.Spider.MaxRetry)
 	fmt.Println("")
 }
 
-func showStats(s *spider.Spider, startTime time.Time) {
-	stats := s.GetStats()
-	duration := time.Since(startTime)
-	fmt.Printf("\n耗时: %s | 请求: %d | 成功: %d | 失败: %d | 重试: %d | 流量: %s\n",
-		duration.Round(time.Second),
-		stats.TotalRequests, stats.SuccessCount, stats.FailCount,
-		stats.RetryCount, formatBytes(stats.Bandwidth))
+// startHealthServer 根据配置启动健康检查服务；当 metrics backend 为 prometheus 时，
+// /healthz 与 /metrics 共用 MetricsConfig.Prometheus.Port 端口。
+func startHealthServer(ctx context.Context, cfg *model.Config, log logger.Logger, s *spider.Spider, startTime time.Time) {
+	if cfg.Metrics.Backend != "prometheus" {
+		return
+	}
+	checker := health.NewChecker(
+		cfg,
+		log,
+		s.Metrics(),
+		func() string { return string(s.State()) },
+		startTime,
+	)
+	if err := checker.Start(ctx); err != nil {
+		log.Warn("启动健康/指标服务失败", logger.Err(err))
+		return
+	}
+	go func() {
+		<-ctx.Done()
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		_ = checker.Stop(shutdownCtx)
+	}()
 }
 
+// showStats 打印运行统计信息。
+func showStats(s interface{ GetStats() model.Stats }, startTime time.Time, log logger.Logger) {
+	stats := s.GetStats()
+	duration := time.Since(startTime)
+	log.Info("运行统计",
+		logger.String("duration", duration.Round(time.Second).String()),
+		logger.Int64("requests", stats.TotalRequests),
+		logger.Int64("success", stats.SuccessCount),
+		logger.Int64("fail", stats.FailCount),
+		logger.Int64("retry", stats.RetryCount),
+		logger.Int64("parse", stats.ParseCount),
+		logger.Int64("parse_fail", stats.ParseFailCount),
+		logger.Int64("storage_save", stats.StorageSaveCount),
+		logger.Int64("storage_save_fail", stats.StorageSaveFail),
+		logger.String("bandwidth", formatBytes(stats.Bandwidth)),
+	)
+}
+
+// formatBytes 将字节数转换为可读字符串。
 func formatBytes(bytes int64) string {
 	const unit = 1024
 	if bytes < unit {
