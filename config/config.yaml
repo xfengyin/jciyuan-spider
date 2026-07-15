@@ -1,97 +1,112 @@
-# jciyuan-spider 配置文件
-# 囧次元动漫爬虫 - 企业级配置
+# jciyuan-spider-v3 企业级配置文件
 
-# 爬虫基础配置
+app:
+  name: jciyuan-spider-v3
+  mode: cli
+  trace_id_header: X-Request-ID
+
 spider:
-  # 目标站点
   base_url: "https://www.jciyuan.com"
-  
-  # 请求间隔（毫秒）
+  detail_url_pattern: "{{base_url}}/acgdetail/{{id}}.html"
   delay: 1000
-  
-  # 超时时间（秒）
   timeout: 10
-  
-  # 最大重试次数
   max_retry: 3
-  
-  # 并发数
   concurrency: 3
+  queue_size: 100
+  crawl_interval: 0
 
-# 反爬配置
+fetcher:
+  type: http
+  http:
+    timeout: 10
+    max_retry: 3
+    transport:
+      max_idle_conns: 100
+      max_conns_per_host: 10
+      idle_conn_timeout: 90s
+      disable_keep_alives: false
+      tls_handshake_timeout: 10s
+    follow_redirects: true
+    max_body_size: 52428800
+  proxy:
+    enable: false
+    strategy: round_robin
+    proxies:
+      - "http://user:pass@proxy1:8080"
+      - "http://proxy2:8080"
+
 anticrawler:
-  # 是否启用代理
-  enable_proxy: false
-  
-  # 代理列表
-  proxies:
-    - ""
-  
-  # 是否随机User-Agent
   random_ua: true
-  
-  # User-Agent列表
   user_agents:
     - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
     - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-  
-  # 是否保持Cookie
   keep_cookie: true
+  referer_policy: origin
+  robots_txt_check: true
 
-# 爬取配置
-crawl:
-  # 默认爬取的动漫ID
-  anime_id: 37439
-  
-  # 是否启用断点续爬
-  resume: true
-  
-  # 增量更新（只爬最新集）
-  incremental: false
-  
-  # 最大爬取集数（0=全部）
-  max_episodes: 0
+parser:
+  type: html
+  html:
+    encoding: auto
+    extractors:
+      - field: title
+        selector:
+          type: regex
+          value: "<title[^>]*>([^<]+)</title>"
+        processors:
+          - type: clean_text
+          - type: split
+            separator: "_"
+      - field: episodes
+        selector:
+          type: regex
+          value: "/acgplay/(\\d+)-(\\d+)-(\\d+)\\.html"
+        multiple: true
+        deduplicate: true
+        sort_by: number
 
-# 存储配置
 storage:
-  # 输出目录
-  output_dir: "./output"
-  
-  # 是否保存JSON
-  save_json: true
-  
-  # 是否保存到SQLite
-  save_sqlite: false
-  
-  # SQLite数据库路径
-  db_path: "./data/spider.db"
-  
-  # 是否保存m3u8播放列表
-  save_m3u8: false
+  type: json
+  json:
+    output_dir: "./output"
+  sqlite:
+    dsn: "./data/spider.db"
+  output:
+    save_json: true
+    save_sqlite: false
+    save_m3u8: false
+    save_raw_html: false
 
-# 日志配置
-log:
-  # 日志级别: debug, info, warn, error
-  level: "info"
-  
-  # 日志文件路径
-  file: "./logs/spider.log"
-  
-  # 是否输出到控制台
-  console: true
-  
-  # 日志文件最大大小（MB）
-  max_size: 10
-  
-  # 保留的旧日志文件数
-  max_backups: 5
+crawl:
+  anime_id: 37439
+  resume: true
+  incremental: false
+  max_episodes: 0
+  max_pages_per_run: 0
 
-# 统计配置
-stats:
-  # 是否启用统计
+middlewares:
+  - name: trace
+  - name: metrics
+  - name: logging
+  - name: rate_limit
+  - name: retry
+  - name: circuit_breaker
+  - name: proxy_rotate
+
+metrics:
   enabled: true
-  
-  # 统计间隔（秒）
-  interval: 30
+  backend: memory
+  prometheus:
+    port: 9090
+    path: /metrics
+
+log:
+  level: info
+  format: text
+  file: "./logs/spider.log"
+  console: true
+  max_size: 10
+  max_backups: 5
+  max_age: 7
+  compress: false
