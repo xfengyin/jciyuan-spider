@@ -1,0 +1,128 @@
+# GoReleaser 配置：定义三端安装包的构建、打包、校验与发布体验
+version: 2
+
+project_name: jciyuan-spider-v3
+
+before:
+  hooks:
+    # 发布前下载依赖并清理旧构建产物
+    - go mod download
+    - go mod tidy
+
+builds:
+  # 通用构建模板
+  - id: jciyuan-spider
+    main: ./main.go
+    binary: jciyuan-spider
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      # 注入版本、commit、构建时间，支持 -version 命令（如已实现）
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      # Windows 暂不发布 arm64（如需可删除此忽略）
+      - goos: windows
+        goarch: arm64
+    # 钩子：构建完成后打印二进制信息
+    hooks:
+      post:
+        - cmd: file '{{ .Path }}'
+          dir: "{{ dir .Path }}"
+
+archives:
+  # 将二进制与 README、LICENSE、默认配置一起打包
+  - id: jciyuan-spider-archive
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- .Os }}_
+      {{- .Arch }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    formats:
+      - tar.gz
+      - zip
+    format_overrides:
+      # Windows 使用 zip，其他使用 tar.gz
+      - goos: windows
+        formats:
+          - zip
+    files:
+      - README.md
+      - README_zh.md
+      - LICENSE
+      - config/config.yaml
+    # 保持二进制在归档根目录，便于用户解压即用
+    wrap_in_directory: false
+
+checksum:
+  # 为所有归档生成 SHA256 校验文件
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+changelog:
+  # 自动生成 Release Notes：按 feat/fix 等分类
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - "^ci:"
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\([\w\-\.]+\))??!?: .+$'
+      order: 0
+    - title: Bug fixes
+      regexp: '^.*?fix(\([\w\-\.]+\))??!?: .+$'
+      order: 1
+    - title: Performance
+      regexp: '^.*?perf(\([\w\-\.]+\))??!?: .+$'
+      order: 2
+    - title: Refactor
+      regexp: '^.*?refactor(\([\w\-\.]+\))??!?: .+$'
+      order: 3
+    - title: Others
+      order: 999
+
+release:
+  # Release 标题与说明
+  name_template: "jciyuan-spider-v3 {{.Version}}"
+  # 预发布标签（pre-v*）自动标记为 prerelease
+  prerelease: auto
+  # 生成 Release Notes
+  mode: replace
+  header: |
+    ## jciyuan-spider-v3 {{.Version}}
+
+    三端安装包下载地址见下方 Assets。
+  footer: |
+    ## 安装说明
+
+    - **Linux / macOS**：下载对应 tar.gz，解压后 `./jciyuan-spider -help`
+    - **Windows**：下载对应 zip，解压后 `jciyuan-spider.exe -help`
+    - **校验**：使用 `sha256sum -c checksums.txt`（Linux/macOS）或 `CertUtil -hashfile xxx.zip SHA256`（Windows）
+
+    > 注意：Release 二进制默认关闭 CGO，SQLite 存储后端不可用；如需 SQLite，请使用 `CGO_ENABLED=1 go build` 本地编译。
+
+# 源码归档（可选，GitHub 会自动提供，GoReleaser 可不重复生成）
+source:
+  enabled: true
+  name_template: "{{ .ProjectName }}_{{ .Version }}_source"
+
+# 禁用默认的 scoop/brew 等包管理器（后续可按需开启）
+scoops:
+  - disable: true
+
+brews:
+  - disable: true

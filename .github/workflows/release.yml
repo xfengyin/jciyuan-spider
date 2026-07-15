@@ -1,0 +1,55 @@
+# Release 工作流：推送 v* 标签时自动构建三端安装包并发布到 GitHub Release
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"       # 例如 v1.0.0、v3.2.1-beta.1
+      - "pre-v*"   # 预发布标签
+
+permissions:
+  contents: write   # 允许创建 Release 并上传资源
+  packages: write
+
+jobs:
+  release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码并拉取完整历史（GoReleaser 需要标签信息生成 Release Notes）
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 设置 Go 环境
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+          cache: true
+
+      # 下载依赖
+      - name: Download dependencies
+        run: go mod download
+
+      # 运行单元测试（阻止失败的代码进入 Release）
+      - name: Run tests
+        run: go test ./...
+
+      # 使用 GoReleaser 构建并发布
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CGO_ENABLED: "0"
+
+      # 输出 Release 页面地址（方便查看）
+      - name: Print release URL
+        run: |
+          echo "Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}"
