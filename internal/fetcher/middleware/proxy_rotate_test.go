@@ -16,6 +16,7 @@ import (
 func TestProxyRotateOnRetryableError(t *testing.T) {
 	pm := NewProxyManager(model.ProxyConfig{
 		Strategy: "round_robin",
+		Enable:  true,
 		Proxies:  []string{"http://proxy1:8080", "http://proxy2:8080"},
 	})
 	mw := ProxyRotateMiddleware(pm)
@@ -37,6 +38,7 @@ func TestProxyRotateOnRetryableError(t *testing.T) {
 func TestProxyRotateNoRotateOnSuccess(t *testing.T) {
 	pm := NewProxyManager(model.ProxyConfig{
 		Strategy: "round_robin",
+		Enable:  true,
 		Proxies:  []string{"http://proxy1:8080", "http://proxy2:8080"},
 	})
 	mw := ProxyRotateMiddleware(pm)
@@ -57,6 +59,7 @@ func TestProxyRotateNoRotateOnSuccess(t *testing.T) {
 func TestProxyRotateNoRotateOnBlockedError(t *testing.T) {
 	pm := NewProxyManager(model.ProxyConfig{
 		Strategy: "round_robin",
+		Enable:  true,
 		Proxies:  []string{"http://proxy1:8080", "http://proxy2:8080"},
 	})
 	mw := ProxyRotateMiddleware(pm)
