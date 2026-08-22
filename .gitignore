@@ -5,6 +5,7 @@ dist/
 
 # 运行时输出
 output/
+logs/
 *.raw.html
 
 # 本地开发
