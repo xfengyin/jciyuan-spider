@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 
-	"jciyuan-spider/internal/config"
 	"jciyuan-spider/internal/fetcher"
 	"jciyuan-spider/internal/logger"
 	"jciyuan-spider/internal/metrics"
@@ -131,20 +130,8 @@ func (c *Container) BuildSpider(ctx context.Context) (*spider.Spider, error) {
 	return s, nil
 }
 
-// MustLoad 加载配置文件并应用环境变量
-func MustLoad(configPath string) *model.Config {
-	loader := config.NewLoader(configPath)
-	cfg, err := loader.Load()
-	if err != nil {
-		// 配置文件不存在时使用默认配置
-		cfg = defaultConfig()
-	}
-	config.LoadFromEnv(cfg)
-	return cfg
-}
-
-// defaultConfig 返回默认配置
-func defaultConfig() *model.Config {
+// DefaultConfig 返回内置默认配置，供无配置文件时兜底。
+func DefaultConfig() *model.Config {
 	return &model.Config{
 		App: model.AppConfig{
 			Name:          "jciyuan-spider-v3",
