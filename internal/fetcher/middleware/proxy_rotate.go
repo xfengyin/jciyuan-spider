@@ -23,15 +23,17 @@ type ProxyManager struct {
 	usage    map[string]int
 }
 
-// NewProxyManager 创建代理管理器。
+// NewProxyManager 创建代理管理器。proxy.enable 未开启时视同无代理。
 func NewProxyManager(cfg model.ProxyConfig) *ProxyManager {
 	pm := &ProxyManager{
-		proxies:  filterEmpty(cfg.Proxies),
 		strategy: cfg.Strategy,
 		usage:    make(map[string]int),
 	}
 	if pm.strategy == "" {
 		pm.strategy = "round_robin"
+	}
+	if cfg.Enable {
+		pm.proxies = filterEmpty(cfg.Proxies)
 	}
 	return pm
 }
