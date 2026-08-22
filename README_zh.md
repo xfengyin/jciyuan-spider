@@ -1,60 +1,42 @@
-# jciyuan-spider v2.0 - 企业级动漫爬虫
+# jciyuan-spider - 企业级动漫爬虫
 
 <p align="center">
-  <strong>Go</strong> · <strong>Enterprise Grade</strong> · <strong>SUPERSpider</strong>
+  <strong>Go</strong> · <strong>Plugin Architecture</strong> · <strong>Middleware Chain</strong>
 </p>
 
 ---
 
-**jciyuan-spider v2.0** 是一款企业级动漫爬虫，基于 SUPERSpider 理念设计，支持抗反爬、并发控制、断点续爬、统计监控等功能。
+**jciyuan-spider** 是一款面向 [www.jciyuan.com](https://www.jciyuan.com) 的动漫信息爬虫：抓取动漫详情页，解析标题与剧集列表，可选抓取每集的 M3U8 播放地址，并以多种后端持久化。基于接口 + SPI 插件架构设计，Fetcher / Parser / Storage 均可替换实现。
 
 ## 功能特性
 
 | 特性 | 描述 |
 |------|------|
-| 🛡️ **抗反爬** | Random UA、Referer、Cookie保持、403检测 |
-| ⚡ **并发控制** | goroutine池、限流、重试机制 |
-| 📦 **存储** | JSON文件、SQLite（可选）、M3U8播放列表 |
-| 🔄 **断点续爬** | 保存爬取状态、中断后可恢复 |
-| 📊 **统计监控** | 请求统计、成功率、带宽监控 |
-| 🏗️ **分层架构** | Fetcher/Parser/Storage 完全解耦 |
-| ⚙️ **配置化** | YAML配置、环境变量覆盖 |
-| 📝 **日志系统** | 分级日志、文件输出、优雅日志 |
+| 🧩 **插件架构** | Fetcher / Parser / Storage 接口 + 注册式 SPI，按配置装配 |
+| ⛓️ **中间件链** | trace → metrics → logging → rate_limit → retry → circuit_breaker → proxy_rotate，顺序可配置 |
+| 🛡️ **抗反爬** | Random UA、Referer、Cookie 保持、URL 白名单、robots.txt 检查 |
+| ⚡ **并发控制** | WorkerPool、信号量限流、指数退避重试、熔断器 |
+| 📦 **多存储后端** | JSON（默认）、SQLite、MySQL、S3，外加内存缓存装饰器 |
+| 🔄 **断点续爬** | 爬取状态持久化，中断后可恢复；支持增量合并保留已抓取的 M3U8 |
+| 📊 **可观测性** | 内存 / Prometheus 指标、/healthz 健康检查、traceId 全链路日志 |
+| ⚙️ **配置化** | YAML 配置 + `JCIYUAN_*` 环境变量覆盖 + 命令行 flag |
+| 📝 **日志** | zap + lumberjack，分级输出、文件轮转 |
 
 ## 快速开始
 
-### 安装
+### 构建与运行
 
 ```bash
 git clone https://github.com/xfengyin/jciyuan-spider.git
 cd jciyuan-spider
 go mod tidy
-go build -o jciyuan-spider main.go
-```
+go build -o jciyuan-spider .
 
-### 基本用法
-
-```bash
-# 爬取默认动漫
+# 使用默认配置运行（config/config.yaml）
 ./jciyuan-spider
 
-# 指定动漫ID
-./jciyuan-spider -id 37439
-
-# 指定URL
-./jciyuan-spider -url "https://www.jciyuan.com/acgdetail/37439.html"
-
-# 设置请求间隔
-./jciyuan-spider -delay 2000
-
-# 启用断点续爬
-./jciyuan-spider -resume
-
-# 增量更新
-./jciyuan-spider -incremental
-
-# 调试模式
-./jciyuan-spider -debug
+# 指定动漫 ID、开启增量更新与调试日志
+./jciyuan-spider -id 37439 -incremental -debug
 ```
 
 ### 命令行参数
@@ -62,110 +44,88 @@ go build -o jciyuan-spider main.go
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
 | `-config` | config/config.yaml | 配置文件路径 |
-| `-id` | 37439 | 动漫ID |
-| `-url` | - | 直接指定URL |
-| `-delay` | 1000 | 请求间隔(ms) |
-| `-output` | ./output | 输出目录 |
+| `-id` | 37439 | 动漫 ID |
+| `-delay` | 1000 | 请求间隔 (ms) |
+| `-output` | ./output | 输出目录（JSON 存储） |
 | `-resume` | false | 启用断点续爬 |
-| `-incremental` | false | 增量更新 |
-| `-stats` | true | 显示统计 |
-| `-debug` | false | 调试模式 |
+| `-incremental` | false | 增量更新（与旧数据合并，保留已抓取的 M3U8） |
+| `-stats` | true | 结束时显示统计信息 |
+| `-debug` | false | 调试模式（日志级别设为 debug） |
+| `-version` | - | 打印版本信息 |
 
 ## 项目结构
 
 ```
 jciyuan-spider/
-├── main.go              # 主程序入口
-├── config/
-│   └── config.yaml      # 配置文件
-├── cmd/
-│   └── config/
-│       └── config.go    # 配置加载
-├── crawler/
-│   └── fetcher.go       # HTTP请求器
-├── parser/
-│   └── parser.go        # HTML解析器
-├── model/
-│   └── model.go         # 数据结构
-├── storage/
-│   └── storage.go       # 存储层
-├── log/
-│   └── logger.go        # 日志系统
-├── utils/
-│   └── utils.go         # 工具函数
-└── README.md
+├── main.go                     # 命令行入口：flag、信号、健康服务
+├── config/config.yaml          # 默认配置
+└── internal/
+    ├── config/                 # YAML 加载、默认值、校验、环境变量覆盖
+    ├── di/                     # 依赖注入容器（含各插件的副作用导入）
+    ├── errors/                 # 错误分类（network/parse/storage/...）+ Retry 标记
+    ├── fetcher/                # Fetcher 接口与中间件
+    │   ├── http/               # HTTP 实现：白名单、robots、UA、gzip
+    │   └── middleware/         # 限流/重试/熔断/代理轮换/trace/指标/日志
+    ├── parser/
+    │   ├── extractor/          # CSS / XPath / Regex 提取器（配置驱动）
+    │   ├── html/               # HTML 解析器 + 剧集链接解析
+    │   └── processor/          # 字段后处理器（去重、排序等）
+    ├── storage/                # Storage 接口 + json/sqlite/mysql/s3/内存缓存
+    ├── spider/                 # 核心编排：任务调度、状态机、增量合并
+    ├── worker/                 # goroutine 池
+    ├── resume/                 # 断点续爬状态机
+    ├── metrics/                # 指标（memory / prometheus）
+    ├── health/                 # /healthz 健康检查
+    ├── logger/                 # zap + lumberjack 封装
+    └── model/                  # 配置与数据模型
 ```
 
 ## 配置说明
 
+完整示例见 [config/config.yaml](config/config.yaml)，主要段落：
+
 ```yaml
-# config/config.yaml
-spider:
-  base_url: "https://www.jciyuan.com"
-  delay: 1000        # 请求间隔(ms)
-  timeout: 10        # 超时(s)
-  max_retry: 3       # 最大重试
-  concurrency: 3      # 并发数
-
-anticrawler:
-  enable_proxy: false
-  random_ua: true
-  keep_cookie: true
-  user_agents:
-    - "Mozilla/5.0 ..."
-
-crawl:
-  anime_id: 37439
-  resume: true
-  incremental: false
-
-storage:
-  output_dir: "./output"
-  save_json: true
-  save_sqlite: false
-  db_path: "./data/spider.db"
-  save_m3u8: false
-
-log:
-  level: "info"
-  file: "./logs/spider.log"
-  console: true
+spider:          # 站点、并发、超时、重试
+crawl:           # anime_id、resume、incremental、max_episodes
+fetcher:         # HTTP 传输参数、代理策略
+anticrawler:     # random_ua、referer_policy、robots_txt_check
+parser:          # html 编码 + extractors（配置驱动的字段提取）
+storage:         # type: json|sqlite|mysql|s3，output 开关（save_json/save_m3u8/save_raw_html）
+middlewares:     # 中间件链及顺序
+metrics:         # memory|prometheus（prometheus 时暴露 /metrics 与 /healthz）
+log:             # 级别、格式、文件轮转
 ```
 
-## 反爬措施
-
-| 措施 | 说明 |
-|------|------|
-| Random UA | 随机选择User-Agent |
-| Referer | 模拟页面跳转 |
-| Cookie保持 | 保持会话Cookie |
-| 限流 | 控制请求频率 |
-| 重试 | 失败自动重试 |
-| 403检测 | 检测访问被禁 |
-| 验证码检测 | 识别验证码页面 |
+配置可被 `JCIYUAN_*` 环境变量与命令行 flag 覆盖；配置文件缺失时回退到内置默认配置。
 
 ## 输出示例
+
+默认（JSON 后端）输出到 `./output/`，字段与配置的 extractor 一致（默认提取 title 与 episodes）：
 
 ```json
 {
   "id": 37439,
   "title": "一人之下第六季",
-  "year": "2026",
-  "region": "大陆",
-  "tags": ["热血", "冒险", "爆笑", "国产动漫"],
-  "cover_image": "https://...",
-  "description": "张楚岚在碧游村事件后...",
-  "update_date": "2026-04-19",
   "episode_num": 17,
   "episodes": [
     {
       "number": 1,
       "title": "第01集",
       "url": "https://www.jciyuan.com/acgplay/37439-4-1.html",
-      "is_vip": false
+      "is_crawled": false
     }
   ]
 }
+```
+
+开启 `crawl.incremental` 后重复运行会与旧数据合并；开启 `storage.output.save_m3u8` 后会并发抓取每集播放页并填充 `m3u8_url`。
+
+## 开发
+
+```bash
+go build ./...
+go vet ./...
+go test ./...
 ```
 
 ## 注意事项
@@ -179,7 +139,3 @@ log:
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
-
----
-
-**Made with ❤️ by Kongming Agent**
