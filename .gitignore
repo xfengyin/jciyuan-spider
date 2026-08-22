@@ -1,0 +1,11 @@
+# 编译产物
+jciyuan-spider
+jciyuan-spider.exe
+dist/
+
+# 运行时输出
+output/
+*.raw.html
+
+# 本地开发
+*.local.yaml

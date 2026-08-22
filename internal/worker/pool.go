@@ -147,17 +147,7 @@ func (p *Pool) Stop() error {
 	return nil
 }
 
-// GracefulStop 是 Stop 的别名，语义上更明确。
-func (p *Pool) GracefulStop() error {
-	return p.Stop()
-}
-
 // QueueSize 返回当前队列长度。
 func (p *Pool) QueueSize() int {
 	return len(p.queue)
-}
-
-// Cap 返回队列容量。
-func (p *Pool) Cap() int {
-	return cap(p.queue)
 }
