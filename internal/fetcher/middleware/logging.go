@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/logger"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/logger"
 )
 
 // LoggingMiddleware 使用 logger.Logger 记录请求 URL、方法、头、状态码、耗时与错误，并自动携带 traceId。

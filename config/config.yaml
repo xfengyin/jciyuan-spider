@@ -13,7 +13,6 @@ spider:
   max_retry: 3
   concurrency: 3
   queue_size: 100
-  crawl_interval: 0
 
 fetcher:
   type: http
@@ -83,7 +82,6 @@ crawl:
   resume: true
   incremental: false
   max_episodes: 0
-  max_pages_per_run: 0
 
 middlewares:
   - name: trace

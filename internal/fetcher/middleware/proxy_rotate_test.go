@@ -7,15 +7,16 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	spidererrors "jciyuan-spider-v2/internal/errors"
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/model"
+	spidererrors "jciyuan-spider/internal/errors"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/model"
 )
 
 // TestProxyRotateOnRetryableError 验证遇到可重试错误时会自动切换代理。
 func TestProxyRotateOnRetryableError(t *testing.T) {
 	pm := NewProxyManager(model.ProxyConfig{
 		Strategy: "round_robin",
+		Enable:  true,
 		Proxies:  []string{"http://proxy1:8080", "http://proxy2:8080"},
 	})
 	mw := ProxyRotateMiddleware(pm)
@@ -37,6 +38,7 @@ func TestProxyRotateOnRetryableError(t *testing.T) {
 func TestProxyRotateNoRotateOnSuccess(t *testing.T) {
 	pm := NewProxyManager(model.ProxyConfig{
 		Strategy: "round_robin",
+		Enable:  true,
 		Proxies:  []string{"http://proxy1:8080", "http://proxy2:8080"},
 	})
 	mw := ProxyRotateMiddleware(pm)
@@ -57,6 +59,7 @@ func TestProxyRotateNoRotateOnSuccess(t *testing.T) {
 func TestProxyRotateNoRotateOnBlockedError(t *testing.T) {
 	pm := NewProxyManager(model.ProxyConfig{
 		Strategy: "round_robin",
+		Enable:  true,
 		Proxies:  []string{"http://proxy1:8080", "http://proxy2:8080"},
 	})
 	mw := ProxyRotateMiddleware(pm)

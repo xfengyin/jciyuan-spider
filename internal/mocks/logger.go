@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"jciyuan-spider-v2/internal/logger"
+	"jciyuan-spider/internal/logger"
 )
 
 // LogEntry 记录一次日志调用。

@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"time"
 
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/storage"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/storage"
 
 	_ "github.com/mattn/go-sqlite3"
 )

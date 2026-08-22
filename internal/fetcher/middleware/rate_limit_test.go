@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"jciyuan-spider-v2/internal/fetcher"
+	"jciyuan-spider/internal/fetcher"
 )
 
 // TestRateLimitEnforcesDelay 验证限流中间件保证相邻请求间隔不低于配置值。

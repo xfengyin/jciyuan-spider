@@ -17,12 +17,12 @@ import (
 	"strings"
 	"time"
 
-	spidererrors "jciyuan-spider-v2/internal/errors"
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/fetcher/middleware"
-	"jciyuan-spider-v2/internal/logger"
-	"jciyuan-spider-v2/internal/metrics"
-	"jciyuan-spider-v2/internal/model"
+	spidererrors "jciyuan-spider/internal/errors"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/fetcher/middleware"
+	"jciyuan-spider/internal/logger"
+	"jciyuan-spider/internal/metrics"
+	"jciyuan-spider/internal/model"
 )
 
 // HTTPFetcher 实现 fetcher.Fetcher 接口的企业级 HTTP 请求器。

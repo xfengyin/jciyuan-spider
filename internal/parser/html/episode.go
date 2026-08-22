@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/model"
 )
 
 // episodePattern 解析剧集 URL：/acgplay/{animeID}-{group}-{number}.html。

@@ -4,7 +4,7 @@
 > **日期**：2026-07-15
 > **状态**：待评审
 > **目标读者**：后端架构师、Go 开发工程师、SRE、QA
-> **范围**：在 jciyuan-spider-v2 已完成接口化重构的基础上，进一步升级为生产可用、高可用、可扩展、可观测、安全、可维护、可测试的企业级爬虫平台。
+> **范围**：在 jciyuan-spider 已完成接口化重构的基础上，进一步升级为生产可用、高可用、可扩展、可观测、安全、可维护、可测试的企业级爬虫平台。
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### 1.1 背景
 
-`jciyuan-spider-v2` 已完成初步企业化改造：
+`jciyuan-spider` 已完成初步企业化改造：
 
 - 模块按 `internal/fetcher`、`internal/parser`、`internal/storage`、`internal/spider` 分层；
 - 核心模块已抽象为接口；
@@ -23,7 +23,7 @@
 
 ### 1.2 目标
 
-将 `jciyuan-spider-v2` 重构为 **jciyuan-spider-v3**，满足以下标准：
+将 `jciyuan-spider` 重构为 **jciyuan-spider-v3**，满足以下标准：
 
 | 维度 | 目标 |
 |------|------|
@@ -286,15 +286,15 @@ import (
     "context"
     "fmt"
 
-    "jciyuan-spider-v2/internal/config"
-    "jciyuan-spider-v2/internal/fetcher"
-    "jciyuan-spider-v2/internal/logger"
-    "jciyuan-spider-v2/internal/metrics"
-    "jciyuan-spider-v2/internal/parser"
-    "jciyuan-spider-v2/internal/resume"
-    "jciyuan-spider-v2/internal/spider"
-    "jciyuan-spider-v2/internal/storage"
-    "jciyuan-spider-v2/internal/worker"
+    "jciyuan-spider/internal/config"
+    "jciyuan-spider/internal/fetcher"
+    "jciyuan-spider/internal/logger"
+    "jciyuan-spider/internal/metrics"
+    "jciyuan-spider/internal/parser"
+    "jciyuan-spider/internal/resume"
+    "jciyuan-spider/internal/spider"
+    "jciyuan-spider/internal/storage"
+    "jciyuan-spider/internal/worker"
 )
 
 // Container 依赖注入容器
@@ -739,7 +739,7 @@ showStats
 // internal/fetcher/http/http.go
 package http
 
-import "jciyuan-spider-v2/internal/fetcher"
+import "jciyuan-spider/internal/fetcher"
 
 func init() {
     fetcher.Register("http", NewHTTPFetcher)

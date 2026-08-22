@@ -12,12 +12,12 @@ import (
 	"syscall"
 	"time"
 
-	"jciyuan-spider-v2/internal/config"
-	"jciyuan-spider-v2/internal/di"
-	"jciyuan-spider-v2/internal/health"
-	"jciyuan-spider-v2/internal/logger"
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/spider"
+	"jciyuan-spider/internal/config"
+	"jciyuan-spider/internal/di"
+	"jciyuan-spider/internal/health"
+	"jciyuan-spider/internal/logger"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/spider"
 )
 
 // 版本信息，由 CI / GoReleaser 通过 -ldflags 注入。
@@ -109,7 +109,7 @@ func loadConfig() (*model.Config, error) {
 	cfg, err := loader.Load()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "配置文件加载失败，使用默认配置: %v\n", err)
-		cfg = defaultConfig()
+		cfg = di.DefaultConfig()
 	}
 	config.LoadFromEnv(cfg)
 	return cfg, nil
@@ -134,64 +134,6 @@ func applyFlags(cfg *model.Config) {
 	}
 	if *debugFlag {
 		cfg.Log.Level = "debug"
-	}
-}
-
-// defaultConfig 返回命令行入口的默认配置，保证无配置文件时仍可运行。
-func defaultConfig() *model.Config {
-	return &model.Config{
-		App: model.AppConfig{
-			Name:          "jciyuan-spider-v3",
-			Mode:          "cli",
-			TraceIDHeader: "X-Request-ID",
-		},
-		Spider: model.SpiderConfig{
-			BaseURL:          "https://www.jciyuan.com",
-			DetailURLPattern: "{{base_url}}/acgdetail/{{id}}.html",
-			Delay:            1000,
-			Timeout:          10,
-			MaxRetry:         3,
-			Concurrency:      3,
-			QueueSize:        100,
-		},
-		Anticrawler: model.AnticrawlerConfig{
-			RandomUA:   true,
-			KeepCookie: true,
-			UserAgents: []string{"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
-		},
-		Fetcher: model.FetcherConfig{
-			Type: "http",
-			HTTP: model.HTTPFetcherConfig{
-				Timeout:         10,
-				MaxRetry:        3,
-				FollowRedirects: true,
-				MaxBodySize:     50 * 1024 * 1024,
-			},
-		},
-		Parser: model.ParserConfig{
-			Type: "html",
-			HTML: model.HTMLParserConfig{Encoding: "auto"},
-		},
-		Storage: model.StorageConfig{
-			Type: "json",
-			JSON: model.JSONStorageConfig{OutputDir: "./output"},
-			Output: model.OutputConfig{
-				SaveJSON: true,
-			},
-		},
-		Crawl: model.CrawlConfig{
-			AnimeID: 37439,
-			Resume:  true,
-		},
-		Metrics: model.MetricsConfig{
-			Enabled: true,
-			Backend: "memory",
-		},
-		Log: model.LogConfig{
-			Level:   "info",
-			Format:  "text",
-			Console: true,
-		},
 	}
 }
 

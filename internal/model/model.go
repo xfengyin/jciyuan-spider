@@ -93,7 +93,6 @@ type SpiderConfig struct {
 	MaxRetry         int    `yaml:"max_retry"`      // 最大重试次数
 	Concurrency      int    `yaml:"concurrency"`    // 全局并发 Worker 数
 	QueueSize        int    `yaml:"queue_size"`     // 任务队列长度
-	CrawlInterval    int    `yaml:"crawl_interval"` // 连续 Crawl 任务间隔 ms
 }
 
 // AnticrawlerConfig 反爬与浏览器指纹配置
@@ -238,8 +237,7 @@ type CrawlConfig struct {
 	AnimeID        int64 `yaml:"anime_id"`
 	Resume         bool  `yaml:"resume"`
 	Incremental    bool  `yaml:"incremental"`
-	MaxEpisodes    int   `yaml:"max_episodes"`      // 0=全部
-	MaxPagesPerRun int   `yaml:"max_pages_per_run"` // 0=无限制
+	MaxEpisodes    int   `yaml:"max_episodes"` // 0=全部
 }
 
 // MiddlewareItem 中间件配置项

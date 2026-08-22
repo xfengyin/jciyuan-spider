@@ -9,9 +9,9 @@ import (
 	"net/url"
 	"sync"
 
-	spidererrors "jciyuan-spider-v2/internal/errors"
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/model"
+	spidererrors "jciyuan-spider/internal/errors"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/model"
 )
 
 // ProxyManager 代理池管理器，支持 round_robin/random/least_used 策略。
@@ -23,15 +23,17 @@ type ProxyManager struct {
 	usage    map[string]int
 }
 
-// NewProxyManager 创建代理管理器。
+// NewProxyManager 创建代理管理器。proxy.enable 未开启时视同无代理。
 func NewProxyManager(cfg model.ProxyConfig) *ProxyManager {
 	pm := &ProxyManager{
-		proxies:  filterEmpty(cfg.Proxies),
 		strategy: cfg.Strategy,
 		usage:    make(map[string]int),
 	}
 	if pm.strategy == "" {
 		pm.strategy = "round_robin"
+	}
+	if cfg.Enable {
+		pm.proxies = filterEmpty(cfg.Proxies)
 	}
 	return pm
 }
