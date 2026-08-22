@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/storage"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/storage"
 )
 
 // memoryStatusStore 是基于内存的 CrawlStatus 存储，仅作兜底使用。

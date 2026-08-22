@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"jciyuan-spider-v2/internal/parser"
+	"jciyuan-spider/internal/parser"
 )
 
 // TestRegexExtractorSingleGroup 验证仅有一个捕获组时返回捕获内容。

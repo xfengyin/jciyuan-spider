@@ -1,4 +1,4 @@
-module jciyuan-spider-v2
+module jciyuan-spider
 
 go 1.25.0
 

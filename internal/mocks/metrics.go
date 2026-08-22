@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"jciyuan-spider-v2/internal/metrics"
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/metrics"
+	"jciyuan-spider/internal/model"
 )
 
 // MockMetrics 实现 metrics.Metrics 接口，用于测试中断言计数变化。

@@ -5,7 +5,7 @@ import (
 	"context"
 	"fmt"
 
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/model"
 )
 
 // Storage 持久化存储接口，所有存储后端必须实现

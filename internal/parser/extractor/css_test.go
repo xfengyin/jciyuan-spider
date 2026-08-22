@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"jciyuan-spider-v2/internal/parser"
+	"jciyuan-spider/internal/parser"
 )
 
 // TestCSSExtractorText 验证 CSS 选择器提取节点文本。

@@ -12,12 +12,12 @@ import (
 	"syscall"
 	"time"
 
-	"jciyuan-spider-v2/internal/config"
-	"jciyuan-spider-v2/internal/di"
-	"jciyuan-spider-v2/internal/health"
-	"jciyuan-spider-v2/internal/logger"
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/spider"
+	"jciyuan-spider/internal/config"
+	"jciyuan-spider/internal/di"
+	"jciyuan-spider/internal/health"
+	"jciyuan-spider/internal/logger"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/spider"
 )
 
 // 版本信息，由 CI / GoReleaser 通过 -ldflags 注入。
