@@ -3,8 +3,8 @@ package extractor
 import (
 	"fmt"
 
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/parser"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/parser"
 )
 
 // Build 根据 SelectorConfig 构造对应类型的提取器。

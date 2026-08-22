@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/model"
 )
 
 // mockPersistence 是一个极简的持久化存储，用于验证内存装饰器是否回写。

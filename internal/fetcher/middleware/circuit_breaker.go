@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/metrics"
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/metrics"
+	"jciyuan-spider/internal/model"
 )
 
 // CircuitState 熔断器状态。

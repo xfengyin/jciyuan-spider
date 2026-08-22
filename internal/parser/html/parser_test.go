@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/model"
 )
 
 // newTestParser 返回配置好的 HTMLParser，用于测试。

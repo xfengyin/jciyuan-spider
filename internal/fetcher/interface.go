@@ -5,9 +5,9 @@ import (
 	"context"
 	"fmt"
 
-	"jciyuan-spider-v2/internal/logger"
-	"jciyuan-spider-v2/internal/metrics"
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/logger"
+	"jciyuan-spider/internal/metrics"
+	"jciyuan-spider/internal/model"
 )
 
 // Request 请求对象，封装 URL、方法、头、体与透传元数据

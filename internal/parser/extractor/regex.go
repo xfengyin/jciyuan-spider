@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"jciyuan-spider-v2/internal/parser"
+	"jciyuan-spider/internal/parser"
 )
 
 // RegexExtractor 基于正则表达式的字段提取器。

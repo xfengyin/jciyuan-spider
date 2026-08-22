@@ -1,8 +1,8 @@
-# jciyuan-spider-v2 企业级重构升级计划
+# jciyuan-spider 企业级重构升级计划
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 将 jciyuan-spider-v2 从原型级代码重构为符合企业级标准的 Go 爬虫项目，实现接口抽象、依赖注入、可测试、可扩展、高可用。
+**Goal:** 将 jciyuan-spider 从原型级代码重构为符合企业级标准的 Go 爬虫项目，实现接口抽象、依赖注入、可测试、可扩展、高可用。
 
 **Architecture:** 采用接口驱动设计（Interface-Driven Design），核心模块（Fetcher/Parser/Storage/Middleware）全部面向接口编程。引入中间件链模式处理请求生命周期（限流/重试/日志/指标）。配置使用标准 YAML 库替代手写解析。日志包重命名避免与标准库冲突。
 
@@ -98,7 +98,7 @@ Create `internal/parser/interface.go`:
 // Package parser - HTML 解析抽象层
 package parser
 
-import "jciyuan-spider-v2/internal/model"
+import "jciyuan-spider/internal/model"
 
 // Parser HTML 解析器接口
 type Parser interface {
@@ -115,7 +115,7 @@ Create `internal/storage/interface.go`:
 // Package storage - 存储抽象层
 package storage
 
-import "jciyuan-spider-v2/internal/model"
+import "jciyuan-spider/internal/model"
 
 // Storage 持久化存储接口
 type Storage interface {
@@ -308,7 +308,7 @@ import (
 	"fmt"
 	"os"
 
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/model"
 
 	"gopkg.in/yaml.v3"
 )
@@ -721,7 +721,7 @@ import (
 	"sync"
 	"time"
 
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/model"
 )
 
 // Collector 指标收集器
@@ -858,8 +858,8 @@ import (
 	"strings"
 	"time"
 
-	"jciyuan-spider-v2/internal/metrics"
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/metrics"
+	"jciyuan-spider/internal/model"
 )
 
 // HTTPFetcher HTTP 请求器实现
@@ -1022,7 +1022,7 @@ import (
 	"net/http"
 	"time"
 
-	"jciyuan-spider-v2/internal/metrics"
+	"jciyuan-spider/internal/metrics"
 )
 
 // Handler 请求处理函数
@@ -1213,7 +1213,7 @@ import (
 	"strings"
 	"time"
 
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/model"
 )
 
 // HTMLParser HTML 解析器实现
@@ -1436,7 +1436,7 @@ import (
 	"sync"
 	"time"
 
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/model"
 )
 
 // JSONStorage JSON 文件存储实现
@@ -1555,7 +1555,7 @@ package storage
 import (
 	"sync"
 
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/model"
 )
 
 // MemoryStorage 内存缓存存储（装饰器模式，包装持久化存储）
@@ -1669,7 +1669,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/model"
 )
 
 // FormatJSON 格式化为 JSON 字符串
@@ -1762,8 +1762,8 @@ import (
 	"fmt"
 	"time"
 
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/storage"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/storage"
 )
 
 // Manager 断点续爬管理器
@@ -1875,13 +1875,13 @@ import (
 	"strings"
 	"time"
 
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/logger"
-	"jciyuan-spider-v2/internal/metrics"
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/parser"
-	"jciyuan-spider-v2/internal/resume"
-	"jciyuan-spider-v2/internal/storage"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/logger"
+	"jciyuan-spider/internal/metrics"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/parser"
+	"jciyuan-spider/internal/resume"
+	"jciyuan-spider/internal/storage"
 )
 
 // Spider 爬虫实例
@@ -2080,7 +2080,7 @@ func (s *Spider) showPreview(anime *model.AnimeInfo) {
 Rewrite `main.go`:
 
 ```go
-// jciyuan-spider-v2 - 企业级动漫爬虫
+// jciyuan-spider - 企业级动漫爬虫
 package main
 
 import (
@@ -2092,9 +2092,9 @@ import (
 	"syscall"
 	"time"
 
-	"jciyuan-spider-v2/internal/config"
-	"jciyuan-spider-v2/internal/logger"
-	"jciyuan-spider-v2/internal/spider"
+	"jciyuan-spider/internal/config"
+	"jciyuan-spider/internal/logger"
+	"jciyuan-spider/internal/spider"
 )
 
 var (
@@ -2221,7 +2221,7 @@ git add internal/spider/ main.go && git commit -m "refactor: Spider 核心逻辑
 Rewrite `main.go`:
 
 ```go
-// jciyuan-spider-v2 - 企业级动漫爬虫
+// jciyuan-spider - 企业级动漫爬虫
 package main
 
 import (
@@ -2233,10 +2233,10 @@ import (
 	"syscall"
 	"time"
 
-	"jciyuan-spider-v2/internal/config"
-	"jciyuan-spider-v2/internal/logger"
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/spider"
+	"jciyuan-spider/internal/config"
+	"jciyuan-spider/internal/logger"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/spider"
 )
 
 var (
@@ -2426,7 +2426,7 @@ cd /workspace && go build ./...
 
 - [ ] **Step 2: 修复编译错误**
 
-根据编译输出逐一修复 import 路径、类型引用等问题。确保所有包引用 `jciyuan-spider-v2/internal/...` 路径。
+根据编译输出逐一修复 import 路径、类型引用等问题。确保所有包引用 `jciyuan-spider/internal/...` 路径。
 
 - [ ] **Step 3: 运行 vet 检查**
 

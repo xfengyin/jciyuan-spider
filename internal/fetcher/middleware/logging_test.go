@@ -9,9 +9,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap/zapcore"
 
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/logger"
-	"jciyuan-spider-v2/internal/mocks"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/logger"
+	"jciyuan-spider/internal/mocks"
 )
 
 // stringField 从日志字段中提取字符串值（仅支持 String/Any 类型）。

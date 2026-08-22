@@ -4,8 +4,8 @@ package middleware
 import (
 	"context"
 
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/logger"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/logger"
 )
 
 // WithTraceID 将 traceId 注入 context，保留旧版入口以兼容现有调用方。

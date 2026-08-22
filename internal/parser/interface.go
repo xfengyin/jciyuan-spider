@@ -5,8 +5,8 @@ import (
 	"context"
 	"fmt"
 
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/model"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/model"
 )
 
 // ParseResult 解析结果，包含动漫主体、剧集列表与审计用原始 HTML

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"sync"
 
-	"jciyuan-spider-v2/internal/fetcher"
+	"jciyuan-spider/internal/fetcher"
 )
 
 // MockResponse 定义单个 URL 的模拟响应或错误。

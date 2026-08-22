@@ -5,25 +5,24 @@ import (
 	"context"
 	"fmt"
 
-	"jciyuan-spider-v2/internal/config"
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/logger"
-	"jciyuan-spider-v2/internal/metrics"
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/parser"
-	"jciyuan-spider-v2/internal/resume"
-	"jciyuan-spider-v2/internal/spider"
-	"jciyuan-spider-v2/internal/storage"
-	"jciyuan-spider-v2/internal/worker"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/logger"
+	"jciyuan-spider/internal/metrics"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/parser"
+	"jciyuan-spider/internal/resume"
+	"jciyuan-spider/internal/spider"
+	"jciyuan-spider/internal/storage"
+	"jciyuan-spider/internal/worker"
 
 	// 触发各插件的 init 注册
-	_ "jciyuan-spider-v2/internal/fetcher/http"
-	_ "jciyuan-spider-v2/internal/parser/html"
-	_ "jciyuan-spider-v2/internal/storage/json"
-	memorystorage "jciyuan-spider-v2/internal/storage/memory"
-	_ "jciyuan-spider-v2/internal/storage/mysql"
-	_ "jciyuan-spider-v2/internal/storage/s3"
-	_ "jciyuan-spider-v2/internal/storage/sqlite"
+	_ "jciyuan-spider/internal/fetcher/http"
+	_ "jciyuan-spider/internal/parser/html"
+	_ "jciyuan-spider/internal/storage/json"
+	memorystorage "jciyuan-spider/internal/storage/memory"
+	_ "jciyuan-spider/internal/storage/mysql"
+	_ "jciyuan-spider/internal/storage/s3"
+	_ "jciyuan-spider/internal/storage/sqlite"
 )
 
 // Container 依赖注入容器
@@ -131,20 +130,8 @@ func (c *Container) BuildSpider(ctx context.Context) (*spider.Spider, error) {
 	return s, nil
 }
 
-// MustLoad 加载配置文件并应用环境变量
-func MustLoad(configPath string) *model.Config {
-	loader := config.NewLoader(configPath)
-	cfg, err := loader.Load()
-	if err != nil {
-		// 配置文件不存在时使用默认配置
-		cfg = defaultConfig()
-	}
-	config.LoadFromEnv(cfg)
-	return cfg
-}
-
-// defaultConfig 返回默认配置
-func defaultConfig() *model.Config {
+// DefaultConfig 返回内置默认配置，供无配置文件时兜底。
+func DefaultConfig() *model.Config {
 	return &model.Config{
 		App: model.AppConfig{
 			Name:          "jciyuan-spider-v3",
