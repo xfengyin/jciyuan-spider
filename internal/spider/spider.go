@@ -12,14 +12,14 @@ import (
 	"sync"
 	"time"
 
-	"jciyuan-spider-v2/internal/fetcher"
-	"jciyuan-spider-v2/internal/logger"
-	"jciyuan-spider-v2/internal/metrics"
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/parser"
-	"jciyuan-spider-v2/internal/resume"
-	"jciyuan-spider-v2/internal/storage"
-	"jciyuan-spider-v2/internal/worker"
+	"jciyuan-spider/internal/fetcher"
+	"jciyuan-spider/internal/logger"
+	"jciyuan-spider/internal/metrics"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/parser"
+	"jciyuan-spider/internal/resume"
+	"jciyuan-spider/internal/storage"
+	"jciyuan-spider/internal/worker"
 )
 
 // TaskType 定义 WorkerPool 中的任务类型。

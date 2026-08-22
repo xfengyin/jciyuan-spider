@@ -15,8 +15,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/storage"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/storage"
 )
 
 // S3Storage S3 对象存储实现，仅实现 Storage 接口。

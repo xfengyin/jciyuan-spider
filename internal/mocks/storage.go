@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/storage"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/storage"
 )
 
 // compile-time 接口校验。

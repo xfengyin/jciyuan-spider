@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"jciyuan-spider-v2/internal/fetcher"
+	"jciyuan-spider/internal/fetcher"
 )
 
 // RateLimitMiddleware 令牌桶限流，按 delayMs 控制相邻请求最小间隔。

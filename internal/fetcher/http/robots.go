@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"jciyuan-spider-v2/internal/logger"
+	"jciyuan-spider/internal/logger"
 )
 
 // robotsRule 记录 robots.txt 中的单条路径规则。

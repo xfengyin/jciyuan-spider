@@ -27,7 +27,7 @@
 
 ```bash
 git clone https://github.com/xfengyin/jciyuan-spider.git
-cd jciyuan-spider-v2
+cd jciyuan-spider
 go mod tidy
 go build -o jciyuan-spider main.go
 ```
@@ -74,7 +74,7 @@ go build -o jciyuan-spider main.go
 ## 项目结构
 
 ```
-jciyuan-spider-v2/
+jciyuan-spider/
 ├── main.go              # 主程序入口
 ├── config/
 │   └── config.yaml      # 配置文件

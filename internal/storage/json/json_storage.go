@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"jciyuan-spider-v2/internal/model"
-	"jciyuan-spider-v2/internal/storage"
+	"jciyuan-spider/internal/model"
+	"jciyuan-spider/internal/storage"
 )
 
 // JSONStorage JSON 文件存储实现。
