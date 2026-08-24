@@ -14,4 +14,5 @@
 - **公开 API**：`crawler` 包（[GoDoc](https://pkg.go.dev/jciyuan-spider/crawler)），仅依赖标准库。
 - **内置默认实现**：`HTTPFetcher` / `HTTPCrawler` / `crawler.Fetch`。
 - **示例**：`examples/demo`（配置驱动通用爬虫）、`examples/jciyuan`（企业级组件适配）、
-  `examples/rss`（RSS/XML 解析）、`examples/csv`（CSV 导出）、`examples/markdown`（HTML→Markdown）。
+  `examples/rss`（RSS/XML 解析）、`examples/csv`（CSV 导出）、`examples/markdown`（HTML→Markdown）、
+  `examples/json-api`（JSON API 抓取）。
