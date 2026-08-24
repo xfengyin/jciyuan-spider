@@ -9,6 +9,7 @@
 | [`rss`](./rss) | 抓取并解析 RSS/XML 源，支持远程 URL 与本地文件（离线演示） | `go run ./examples/rss -url examples/rss/sample.xml` |
 | [`csv`](./csv) | 把 crawler Engine 抓取结果导出为 CSV（字段并集表头 + 自动转义） | `go run ./examples/csv -url https://example.com` |
 | [`markdown`](./markdown) | 抓取 HTML 并导出 Markdown 文件（仅标准库的轻量 HTML→MD 转换） | `go run ./examples/markdown -url https://example.com` |
+| [`json-api`](./json-api) | 抓取 JSON API 并输出结构化 item（JSON 数组展开为多条） | `go run ./examples/json-api -url https://httpbin.org/json` |
 
 所有示例均在仓库根目录下运行。输出默认为 `./output/` 下的 JSON Lines 文件（`items.jsonl`）。
 各示例详解见 [docs/examples.md](../docs/examples.md)。

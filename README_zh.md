@@ -26,6 +26,9 @@
 >
 > M5 里程碑：Markdown 导出示例（[`examples/markdown`](examples/markdown)）、文档完善，
 > v0.2.0 发布准备（当前 tag：v0.1.0）。
+>
+> M6 里程碑：JSON API 示例（[`examples/json-api`](examples/json-api)）、文档同步、
+> [CHANGELOG](CHANGELOG.md) v0.3.0 候选条目（当前 tag：v0.2.0）。
 
 ## 功能特性
 
@@ -85,6 +88,7 @@ go run ./examples/rss -url examples/rss/sample.xml            # RSS/XML 源（�
 | [`examples/rss`](examples/rss) | 用框架抓取并解析 RSS/XML 源，支持远程 URL 与本地文件 | `go run ./examples/rss -url examples/rss/sample.xml` |
 | [`examples/csv`](examples/csv) | 把 crawler Engine 抓取结果导出为 CSV（字段并集表头 + 自动转义） | `go run ./examples/csv -url https://example.com` |
 | [`examples/markdown`](examples/markdown) | 抓取 HTML 并导出 Markdown 文件（仅标准库的轻量 HTML→MD 转换） | `go run ./examples/markdown -url https://example.com` |
+| [`examples/json-api`](examples/json-api) | 抓取 JSON API 并输出结构化 item（JSON 数组展开为多条） | `go run ./examples/json-api -url https://httpbin.org/json` |
 
 ## 项目结构
 

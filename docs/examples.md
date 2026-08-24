@@ -11,6 +11,7 @@
 | [`examples/rss`](../examples/rss) | 用框架抓取并解析 RSS/XML 源，支持远程 URL 与本地文件（离线演示） | `go run ./examples/rss -url examples/rss/sample.xml` |
 | [`examples/csv`](../examples/csv) | 把 crawler Engine 抓取结果导出为 CSV | `go run ./examples/csv -url https://example.com` |
 | [`examples/markdown`](../examples/markdown) | 抓取 HTML 并导出 Markdown 文件（仅标准库转换） | `go run ./examples/markdown -url https://example.com` |
+| [`examples/json-api`](../examples/json-api) | 抓取 JSON API 并输出结构化 item（数组展开为多条） | `go run ./examples/json-api -url https://httpbin.org/json` |
 
 ## 1. examples/demo —— 配置驱动通用爬虫
 
@@ -150,6 +151,32 @@ go run ./examples/markdown -url https://example.com,https://example.org -output 
 - 全部转换用正则表达式完成（`` 边界防误匹配，如 `<strong>` 不会误伤 `<body>`）。
 - 文件名由 URL 生成（host+path 清洗保留点号），如 `https://example.com` → `example.com.md`。
 - `htmlToMarkdown()` 独立成函数便于单测；端到端走真实 Engine 链路。
+
+## 6. examples/json-api —— 抓取 JSON API
+
+演示抓取 JSON API 并输出结构化 item：Fetch 用默认 HTTP 抓取器，Parse 用
+`encoding/json` 解析（优先匹配 slideshow 结构，不匹配回退为原始 map），
+Extract 把 JSON 数组（slides）展开为多条结构化 item。
+
+```bash
+go run ./examples/json-api -url https://httpbin.org/json
+go run ./examples/json-api -url https://httpbin.org/json -output ./output/json-api
+go run ./examples/json-api -url https://api.example.com/v1/items   # 任意 JSON 接口（回退为整包 item）
+```
+
+| 参数 | 默认 | 说明 |
+|------|------|------|
+| `-url` | https://httpbin.org/json | JSON API 地址，多个用逗号分隔 |
+| `-output` | ./output/json-api | 输出目录（JSON Lines） |
+| `-concurrency` | 3 | Engine 并发数 |
+| `-max-retry` | 2 | 失败重试次数 |
+| `-quiet` | false | 安静模式 |
+
+实现要点：
+
+- `slideshowResp` 结构体对应 httpbin.org/json；字段用 `json` tag 绑定。
+- 结构不匹配时回退 `map[string]any`，保证任意 JSON API 都能输出 item。
+- 本地 mock server 单测覆盖：slideshow 展开（3 条）、回退、非法 JSON 失败记录。
 
 ## 输出格式
 
