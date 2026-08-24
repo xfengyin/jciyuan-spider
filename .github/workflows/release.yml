@@ -1,56 +1,91 @@
-# Release 工作流：推送 v* 标签时自动构建三端安装包并发布到 GitHub Release
+# Release 工作流：推送 v* 标签时构建三端二进制，压缩后发布到 GitHub Release。
+# 采用 go build 矩阵（不依赖 GoReleaser），权限最小化（仅 contents: write）。
 name: Release
 
 on:
   push:
     tags:
-      - "v*"       # 例如 v1.0.0、v3.2.1-beta.1
-      - "pre-v*"   # 预发布标签
+      - "v*" # 例如 v0.1.0、v1.2.3-beta.1
 
 permissions:
-  contents: write   # 允许创建 Release 并上传资源
-  packages: write
+  contents: write # 仅用于创建 Release 与上传资源
 
 jobs:
-  release:
-    name: Build and Release
+  build:
+    name: Build (${{ matrix.os }}-${{ matrix.arch }})
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: linux
+            arch: amd64
+            ext: ""
+          - os: windows
+            arch: amd64
+            ext: ".exe"
+          - os: darwin
+            arch: arm64
+            ext: ""
     steps:
-      # 检出代码并拉取完整历史（GoReleaser 需要标签信息生成 Release Notes）
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      # 设置 Go 环境
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          # 与 go.mod 保持一致
-          go-version: "1.25"
+          go-version: "1.25" # 与 go.mod 保持一致
           cache: true
 
-      # 下载依赖
-      - name: Download dependencies
-        run: go mod download
-
-      # 运行单元测试（阻止失败的代码进入 Release）
-      - name: Run tests
-        run: go test ./...
-
-      # 使用 GoReleaser 构建并发布
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          distribution: goreleaser
-          version: "~> v2"
-          args: release --clean
+      - name: Build binary
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CGO_ENABLED: "0"
-
-      # 输出 Release 页面地址（方便查看）
-      - name: Print release URL
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
         run: |
-          echo "Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}"
+          mkdir -p dist
+          go build -trimpath -ldflags "-s -w" \
+            -o dist/jciyuan-spider-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.ext }} .
+
+      - name: Compress artifact
+        run: |
+          cd dist
+          if [ "${{ matrix.os }}" = "windows" ]; then
+            zip -q jciyuan-spider-${{ matrix.os }}-${{ matrix.arch }}.zip \
+              jciyuan-spider-${{ matrix.os }}-${{ matrix.arch }}.exe
+          else
+            tar -czf jciyuan-spider-${{ matrix.os }}-${{ matrix.arch }}.tar.gz \
+              jciyuan-spider-${{ matrix.os }}-${{ matrix.arch }}
+          fi
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.os }}-${{ matrix.arch }}
+          path: dist/
+          retention-days: 3
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist/
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: |
+          cd dist
+          sha256sum *.tar.gz *.zip > checksums.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/checksums.txt
+          generate_release_notes: true

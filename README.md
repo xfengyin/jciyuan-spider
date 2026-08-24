@@ -2,6 +2,9 @@
 
 <p align="center">
   <strong>Go</strong> · <strong>Generic Crawler Interface</strong> · <strong>Engine</strong> · <strong>SPI Plugins</strong>
+  <br/><br/>
+  <a href="https://pkg.go.dev/github.com/xfengyin/jciyuan-spider/crawler"><img src="https://pkg.go.dev/badge/github.com/xfengyin/jciyuan-spider/crawler.svg" alt="Go Reference"></a>
+  <a href="https://github.com/xfengyin/jciyuan-spider/releases"><img src="https://img.shields.io/github/v/release/xfengyin/jciyuan-spider?style=flat-square" alt="Release"></a>
 </p>
 
 ---
@@ -17,6 +20,9 @@
 > （`HTTPFetcher` / `HTTPCrawler` / `crawler.Fetch`）、3 行快速开始与框架能力表格。
 >
 > M3 里程碑：文档站（[`docs/`](docs/README.md)）+ RSS 示例（[`examples/rss`](examples/rss)）+ GoDoc 完善。
+>
+> M4 里程碑：Release 流水线（v* 标签 → go build 矩阵 → softprops 发布，权限最小化）、
+> pkg.go.dev / Release badge、CSV 导出示例（[`examples/csv`](examples/csv)）。
 
 ## 功能特性
 
@@ -74,6 +80,7 @@ go run ./examples/rss -url examples/rss/sample.xml            # RSS/XML 源（�
 | [`examples/demo`](examples/demo) | 配置驱动通用 HTML 爬虫：YAML 定义起始 URL + CSS/正则抽取规则 | `go run ./examples/demo -config examples/demo/config.yaml` |
 | [`examples/jciyuan`](examples/jciyuan) | 复用内置企业级 Fetcher/Parser 组件抓取 jciyuan.com 动漫详情页 | `go run ./examples/jciyuan -id 37439` |
 | [`examples/rss`](examples/rss) | 用框架抓取并解析 RSS/XML 源，支持远程 URL 与本地文件 | `go run ./examples/rss -url examples/rss/sample.xml` |
+| [`examples/csv`](examples/csv) | 把 crawler Engine 抓取结果导出为 CSV（字段并集表头 + 自动转义） | `go run ./examples/csv -url https://example.com` |
 
 ## 项目结构
 
