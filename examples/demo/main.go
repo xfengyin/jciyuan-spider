@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"jciyuan-spider/crawler"
+	"jciyuan-spider/internal/version"
 
 	"github.com/PuerkitoBio/goquery"
 	"gopkg.in/yaml.v3"
@@ -174,13 +175,18 @@ func (c *demoCrawler) selectValues(html string, rule Rule) ([]string, error) {
 }
 
 var (
-	configPath = flag.String("config", "examples/demo/config.yaml", "任务配置文件路径")
-	urlFlag    = flag.String("url", "", "覆盖 start_urls，多个 URL 用逗号分隔")
-	outputFlag = flag.String("output", "", "覆盖输出目录")
+	configPath  = flag.String("config", "examples/demo/config.yaml", "任务配置文件路径")
+	urlFlag     = flag.String("url", "", "覆盖 start_urls，多个 URL 用逗号分隔")
+	outputFlag  = flag.String("output", "", "覆盖输出目录")
+	versionFlag = flag.Bool("version", false, "打印版本信息")
 )
 
 func main() {
 	flag.Parse()
+	if *versionFlag {
+		fmt.Printf("jciyuan-spider demo example %s\n", version.Version)
+		os.Exit(0)
+	}
 
 	data, err := os.ReadFile(*configPath)
 	if err != nil {

@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"jciyuan-spider/crawler"
+	"jciyuan-spider/internal/version"
 )
 
 // rssFeed RSS 2.0 文档结构（仅覆盖常用字段）。
@@ -106,13 +107,18 @@ func localPath(url string) (string, bool) {
 }
 
 var (
-	urlFlag    = flag.String("url", "", "RSS/XML 源地址：http(s):// 远程 URL 或本地文件路径")
-	outputFlag = flag.String("output", "", "输出目录（默认 ./output/rss）")
-	quietFlag  = flag.Bool("quiet", false, "安静模式")
+	urlFlag     = flag.String("url", "", "RSS/XML 源地址：http(s):// 远程 URL 或本地文件路径")
+	outputFlag  = flag.String("output", "", "输出目录（默认 ./output/rss）")
+	quietFlag   = flag.Bool("quiet", false, "安静模式")
+	versionFlag = flag.Bool("version", false, "打印版本信息")
 )
 
 func main() {
 	flag.Parse()
+	if *versionFlag {
+		fmt.Printf("jciyuan-spider rss example %s\n", version.Version)
+		os.Exit(0)
+	}
 	if *urlFlag == "" {
 		fmt.Fprintln(os.Stderr, "请通过 -url 指定 RSS/XML 源，例如：\n"+
 			"  go run ./examples/rss -url examples/rss/sample.xml\n"+
