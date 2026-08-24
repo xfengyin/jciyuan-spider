@@ -6,7 +6,8 @@
 |------|------|
 | [getting-started.md](getting-started.md) | 快速开始：三行代码抓取、运行内置示例、自定义爬虫、配置与命令行 |
 | [architecture.md](architecture.md) | 架构设计：Crawler 接口、Engine、SPI、默认实现、内部企业级组件、扩展点 |
-| [examples.md](examples.md) | 示例详解：`examples/demo` / `examples/jciyuan` / `examples/rss` |
+| [examples.md](examples.md) | 示例详解：demo / jciyuan / rss / csv / markdown / json-api / xml |
+| [PROMOTION.md](PROMOTION.md) | 社区推广包：Awesome/ HN/ Reddit/ 中文社区文案 + tracking 表 |
 
 ## 速览
 
@@ -15,4 +16,4 @@
 - **内置默认实现**：`HTTPFetcher` / `HTTPCrawler` / `crawler.Fetch`。
 - **示例**：`examples/demo`（配置驱动通用爬虫）、`examples/jciyuan`（企业级组件适配）、
   `examples/rss`（RSS/XML 解析）、`examples/csv`（CSV 导出）、`examples/markdown`（HTML→Markdown）、
-  `examples/json-api`（JSON API 抓取）。
+  `examples/json-api`（JSON API 抓取）、`examples/xml`（XML/RSS→CSV 复合场景）。

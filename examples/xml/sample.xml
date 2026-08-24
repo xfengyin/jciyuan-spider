@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>jciyuan-spider XML 示例源</title>
+    <link>https://example.org/</link>
+    <description>用于 examples/xml 的本地离线演示 RSS 源</description>
+    <item>
+      <title>XML 示例：抓取 RSS 转 CSV</title>
+      <link>https://example.org/posts/xml-to-csv</link>
+      <description>演示 XML/RSS 输入 → 结构化 item → CSV 输出的复合场景。</description>
+      <pubDate>Mon, 08 Sep 2025 10:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>支持 RSS 2.0 与 Atom 两种格式</title>
+      <link>https://example.org/posts/rss-and-atom</link>
+      <description>Parse 阶段自动识别 feed 类型，Extract 输出统一字段。</description>
+      <pubDate>Mon, 15 Sep 2025 10:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
