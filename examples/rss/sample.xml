@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>jciyuan-spider 示例源</title>
+    <link>https://example.org/</link>
+    <description>用于 examples/rss 的本地离线演示 RSS 源</description>
+    <item>
+      <title>框架发布 M1：通用 Go 爬虫框架</title>
+      <link>https://example.org/posts/framework-m1</link>
+      <description>从单一站点爬虫转型为通用 Crawler 接口 + Engine 调度。</description>
+      <pubDate>Mon, 18 Aug 2025 10:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>框架发布 M2：默认 HTTP 抓取实现</title>
+      <link>https://example.org/posts/framework-m2</link>
+      <description>新增 HTTPFetcher / HTTPCrawler，三行代码即可抓取任意页面。</description>
+      <pubDate>Mon, 25 Aug 2025 10:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>示例：抓取并解析 RSS/XML 源</title>
+      <link>https://example.org/posts/rss-example</link>
+      <description>本示例演示用 crawler 框架解析 RSS 2.0 订阅源。</description>
+      <pubDate>Mon, 01 Sep 2025 10:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

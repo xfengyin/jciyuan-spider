@@ -1,14 +1,25 @@
-// Package crawler 提供轻量通用 Go 爬虫框架的核心抽象：
-// Crawler 接口（Fetch → Parse → Extract）、Engine 调度器与按名称注册的 SPI 机制。
+// Package crawler 提供轻量通用 Go 爬虫框架的核心抽象：Crawler 接口
+// （Fetch → Parse → Extract）、Engine 调度器、按名称注册的 SPI 机制与默认 HTTP 实现。
+// 整个公开包仅依赖标准库。
 //
-// 设计目标
+// # 设计目标
 //
-//   - 通用：任何站点/数据源只需实现 Crawler 接口即可接入框架，由 Engine 统一调度
+//   - 通用：任何站点/数据源只需实现 [Crawler] 接口即可接入框架，由 [Engine] 统一调度
 //     并发、重试、限速与结果输出，无需关心抓取细节。
 //   - 轻量：核心包只依赖标准库；HTTP 客户端、选择器、存储等均可按需替换。
-//   - 可扩展：通过 Register/Build 按名称装配 Crawler 实现，支持配置驱动。
+//   - 可扩展：通过 [Register]/[Build] 按名称装配 Crawler 实现，支持配置驱动。
 //
-// 快速上手
+// # 包内容
+//
+//   - [Crawler]：核心接口，实现 Fetch/Parse/Extract 三个阶段即可接入框架。
+//   - [Page] / [Item]：原始页面与结构化结果类型。
+//   - [Engine] / [Options] / [Result]：通用调度器，提供并发、重试、限速、超时与
+//     JSON Lines 输出（[Options.OutputDir]）。
+//   - [Register] / [Build] / [Builder]：按名称注册与构建爬虫实现的 SPI。
+//   - [HTTPFetcher] / [HTTPCrawler] / [Fetch]：默认 HTTP 实现（http.go），
+//     便于快速开始，不写任何抓取代码即可跑通。
+//
+// # 快速上手（自定义实现）
 //
 //	type myCrawler struct{}
 //
@@ -27,6 +38,14 @@
 //
 //	eng := crawler.NewEngine(&myCrawler{}, crawler.Options{Concurrency: 2, OutputDir: "./out"})
 //	result, err := eng.Run(ctx, []string{"https://example.com"})
+//
+// # 快速上手（默认 HTTP 实现，三行）
+//
+//	ctx := context.Background()
+//	result, _ := crawler.NewEngine(crawler.NewHTTPCrawler(), crawler.Options{}).Run(ctx, []string{"https://example.com"})
+//	fmt.Println(result.Items[0]["text"])
+//
+// 更多示例见仓库 examples/ 目录；完整文档见 docs/ 目录。
 package crawler
 
 import (
