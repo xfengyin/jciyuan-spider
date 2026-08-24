@@ -42,6 +42,10 @@ jobs:
       - name: Run go vet
         run: go vet ./...
 
+      # 构建全部包（框架包 crawler/、examples/ 示例与根 CLI 的编译校验）
+      - name: Build all packages
+        run: go build ./...
+
       # 构建全平台（测试交叉编译能力，关闭 CGO 以保持与 Release 一致）
       - name: Build all platforms
         env:
