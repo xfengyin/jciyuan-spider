@@ -1,0 +1,26 @@
+# examples/demo 任务配置：抓取任意站点并抽取字段。
+# 选择器 type 支持 css 与 regex；multiple: true 时返回列表，否则返回首个匹配。
+name: demo
+start_urls:
+  - "https://example.com"
+rules:
+  - field: title
+    selector:
+      type: css
+      value: "h1"
+  - field: paragraph
+    selector:
+      type: css
+      value: "p"
+  - field: links
+    selector:
+      type: css
+      value: "a"
+      attr: href
+    multiple: true
+concurrency: 2
+max_retry: 2
+timeout: 10s
+delay: 500ms
+output_dir: ./output/demo
+user_agent: "jciyuan-spider-demo/0.1 (M1 framework example)"
