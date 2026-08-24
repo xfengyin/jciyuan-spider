@@ -13,6 +13,9 @@
 
 > M1 里程碑：从「单一站点爬虫」转型为「通用爬虫框架」——新增公开框架包 [`crawler/`](crawler)，
 > 原功能保持可用（根目录 CLI 不变）。
+>
+> M2 里程碑：框架工程化与可发现性——CI（vet/build/test）、默认 HTTP 抓取实现
+> （`HTTPFetcher` / `HTTPCrawler` / `crawler.Fetch`）、3 行快速开始与框架能力表格。
 
 ## 功能特性
 
@@ -29,9 +32,31 @@
 | 🔄 **断点续爬** | 爬取状态持久化，中断后可恢复；支持增量合并保留已抓取的 M3U8 |
 | 📊 **可观测性** | 内存 / Prometheus 指标、/healthz 健康检查、traceId 全链路日志 |
 
+## 框架能力一览
+
+| 层 | 能力 | 位置 |
+|----|------|------|
+| **接口层** | `Crawler` 接口（`Name/Fetch/Parse/Extract`）、`Page`、`Item` | [`crawler/crawler.go`](crawler/crawler.go) |
+| **SPI** | `Register` / `Build` 按名称装配爬虫实现 | 同上 |
+| **调度层** | `Engine`：并发、重试、限速、超时、JSONL 输出、失败明细 | [`crawler/engine.go`](crawler/engine.go) |
+| **默认实现** | `HTTPFetcher`（net/http 抓取）、`HTTPCrawler`（完整 Crawler）、`crawler.Fetch` 一行式 | [`crawler/http.go`](crawler/http.go) |
+| **示例** | `examples/jciyuan`（企业级组件适配）、`examples/demo`（配置驱动通用爬虫） | [`examples/`](examples/README.md) |
+| **工程化** | CI：`go vet` / `go build ./...` / `go test -race`（PR + push） | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
+| **文档** | 快速开始、接口说明、配置、免责声明 | `README.md` / `README_zh.md` |
+
 ## 快速开始
 
-### 方式一：运行内置示例
+### 方式一：三行代码抓取任意页面
+
+```go
+ctx := context.Background()
+result, _ := crawler.NewEngine(crawler.NewHTTPCrawler(), crawler.Options{}).Run(ctx, []string{"https://example.com"})
+fmt.Println(result.Items[0]["text"]) // 输出页面正文
+```
+
+更简的单行抓取：`page, _ := crawler.Fetch(ctx, "https://example.com")`。
+
+### 方式二：运行内置示例
 
 ```bash
 git clone https://github.com/xfengyin/jciyuan-spider.git
@@ -40,7 +65,7 @@ go run ./examples/demo -config examples/demo/config.yaml                    # �
 go run ./examples/jciyuan -id 37439                                         # jciyuan 示例：抓取动漫详情页
 ```
 
-### 方式二：实现自己的爬虫（约 30 行）
+### 方式三：实现自己的爬虫（约 30 行）
 
 ```go
 package main
@@ -136,6 +161,28 @@ return &myCrawler{}, nil
 c, err := crawler.Build("my", cfg) // 按名称构建
 ```
 
+### 默认 HTTP 实现（快速开始）
+
+不需要自定义抓取逻辑时，可直接使用内置的默认实现：
+
+```go
+// HTTPFetcher：只实现 Fetch 阶段（可自定义超时/UA/请求头/体积上限/重定向）
+page, err := crawler.NewHTTPFetcher(crawler.HTTPOptions{
+	Timeout:      10 * time.Second,
+	UserAgent:    "my-agent/1.0",
+	MaxBodySize:  16 << 20, // 16MB
+}).Fetch(ctx, "https://example.com")
+
+// HTTPCrawler：完整 Crawler 实现（Fetch 后 Parse 透传、Extract 输出 {text} 条目）
+result, err := crawler.NewEngine(crawler.NewHTTPCrawler(), crawler.Options{}).Run(ctx, urls)
+
+// 一行式便捷函数（包级共享默认抓取器）
+page, err := crawler.Fetch(ctx, "https://example.com")
+```
+
+`HTTPFetcher` 仅依赖标准库；需要代理池、中间件链、反爬等企业级能力时，
+参考 [`examples/jciyuan`](examples/jciyuan) 换用仓库内置的 `internal/fetcher`。
+
 ## Examples 示例
 
 | 示例 | 说明 | 运行 |
@@ -148,7 +195,7 @@ c, err := crawler.Build("my", cfg) // 按名称构建
 ```
 jciyuan-spider/
 ├── main.go                     # 原有 CLI 入口（jciyuan 动漫爬虫，保持兼容）
-├── crawler/                    # 🆕 通用框架包：Crawler 接口 + Engine + SPI（仅依赖标准库）
+├── crawler/                    # 🆕 通用框架包：Crawler 接口 + Engine + SPI + 默认 HTTP 实现（仅依赖标准库）
 ├── config/config.yaml          # 默认配置
 ├── examples/
 │   ├── jciyuan/                # 🆕 示例：企业级组件 → 框架接口适配
