@@ -12,6 +12,7 @@
 | [`examples/csv`](../examples/csv) | 把 crawler Engine 抓取结果导出为 CSV | `go run ./examples/csv -url https://example.com` |
 | [`examples/markdown`](../examples/markdown) | 抓取 HTML 并导出 Markdown 文件（仅标准库转换） | `go run ./examples/markdown -url https://example.com` |
 | [`examples/json-api`](../examples/json-api) | 抓取 JSON API 并输出结构化 item（数组展开为多条） | `go run ./examples/json-api -url https://httpbin.org/json` |
+| [`examples/xml`](../examples/xml) | 抓取 XML/RSS/Atom 源并导出 CSV（复合场景） | `go run ./examples/xml -url examples/xml/sample.xml` |
 
 ## 1. examples/demo —— 配置驱动通用爬虫
 
@@ -177,6 +178,36 @@ go run ./examples/json-api -url https://api.example.com/v1/items   # 任意 JSON
 - `slideshowResp` 结构体对应 httpbin.org/json；字段用 `json` tag 绑定。
 - 结构不匹配时回退 `map[string]any`，保证任意 JSON API 都能输出 item。
 - 本地 mock server 单测覆盖：slideshow 展开（3 条）、回退、非法 JSON 失败记录。
+
+## 7. examples/xml —— XML/RSS 源转 CSV（复合场景）
+
+演示「XML 输入 → 结构化 item → CSV 输出」的复合场景（与 `examples/rss` 的 JSONL 输出
+区分）：Parse 用 `encoding/xml` 同时支持 **RSS 2.0 与 Atom**，Extract 输出统一字段
+`{title, link, description, pub_date}`，再以 CSV 落盘（复用与 `examples/csv` 一致的
+`ItemsToCSV` 实现）。
+
+```bash
+# 本地文件离线演示（内置 sample.xml）
+go run ./examples/xml -url examples/xml/sample.xml
+
+# 远程 RSS/Atom 源
+go run ./examples/xml -url https://example.org/feed.xml
+
+# 自定义输出路径
+go run ./examples/xml -url examples/xml/sample.xml -output ./output/xml/feed.csv
+```
+
+| 参数 | 默认 | 说明 |
+|------|------|------|
+| `-url` | - | XML/RSS/Atom 源：http(s):// 远程 URL 或本地文件路径（必填） |
+| `-output` | ./output/xml/feed.csv | CSV 输出路径 |
+| `-quiet` | false | 安静模式 |
+
+实现要点：
+
+- Fetch 识别本地文件（含 `file://`）与远程 URL；Parse 自动识别 RSS/Atom 两种格式。
+- `ItemsToCSV` 与 `examples/csv` 保持一致：字段并集排序表头、`encoding/csv` 自动转义。
+- 单测覆盖：RSS→CSV（含逗号转义）、Atom→CSV（字段映射）、非法文档失败记录。
 
 ## 输出格式
 
