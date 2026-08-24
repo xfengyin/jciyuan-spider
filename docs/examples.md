@@ -9,6 +9,7 @@
 | [`examples/demo`](../examples/demo) | 配置驱动通用 HTML 爬虫：YAML 定义起始 URL + CSS/正则抽取规则，纯标准库 + goquery | `go run ./examples/demo -config examples/demo/config.yaml` |
 | [`examples/jciyuan`](../examples/jciyuan) | 复用内部企业级 Fetcher/Parser 的框架化实现，抓取 jciyuan.com 动漫详情页 | `go run ./examples/jciyuan -id 37439` |
 | [`examples/rss`](../examples/rss) | 用框架抓取并解析 RSS/XML 源，支持远程 URL 与本地文件（离线演示） | `go run ./examples/rss -url examples/rss/sample.xml` |
+| [`examples/csv`](../examples/csv) | 把 crawler Engine 抓取结果导出为 CSV | `go run ./examples/csv -url https://example.com` |
 
 ## 1. examples/demo —— 配置驱动通用爬虫
 
@@ -88,6 +89,34 @@ go run ./examples/rss -url https://httpbin.org/xml
 - `localPath()` 识别本地文件（含 `file://` 前缀），直接 `os.ReadFile`，全程无网络。
 - RSS 结构体仅覆盖常用字段（channel.title/link/description + item.title/link/description/pubDate）。
 - 非 RSS 2.0 / 非法 XML 会返回明确错误并记录到 `Result.Failures`。
+
+## 4. examples/csv —— 导出抓取结果为 CSV
+
+演示把 `crawler.Engine` 的抓取结果（`[]crawler.Item`）转成 CSV 落地：
+`run()` 用默认 HTTP 爬虫抓取，`ItemsToCSV()` 生成 CSV（字段并集排序作表头，
+`encoding/csv` 自动处理逗号/引号/换行转义）。
+
+```bash
+# 单站点
+go run ./examples/csv -url https://example.com
+
+# 多站点（逗号分隔）+ 自定义输出路径
+go run ./examples/csv -url https://example.com,https://example.org -output ./output/csv/result.csv
+```
+
+| 参数 | 默认 | 说明 |
+|------|------|------|
+| `-url` | - | 抓取目标 URL，多个用逗号分隔（必填） |
+| `-output` | ./output/csv/result.csv | CSV 输出路径 |
+| `-concurrency` | 3 | Engine 并发数 |
+| `-max-retry` | 2 | 失败重试次数 |
+| `-quiet` | false | 安静模式 |
+
+实现要点：
+
+- `run()` 封装「Engine 抓取」；`ItemsToCSV()` 独立成函数便于复用与单测。
+- 表头 = 所有 Item 字段名的排序并集；缺失字段留空，`[]string` 值以 `; ` 合并。
+- 嵌套结构（map/[]Item）以 `fmt.Sprint` 兜底，适合扁平化结果。
 
 ## 输出格式
 
