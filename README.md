@@ -29,6 +29,9 @@
 >
 > M6 里程碑：JSON API 示例（[`examples/json-api`](examples/json-api)）、文档同步、
 > [CHANGELOG](CHANGELOG.md) v0.3.0 候选条目（当前 tag：v0.2.0）。
+>
+> M7 里程碑：社区推广包（[`docs/PROMOTION.md`](docs/PROMOTION.md)）、
+> XML/RSS→CSV 复合示例（[`examples/xml`](examples/xml)）（当前 tag：v0.3.0）。
 
 ## 功能特性
 
@@ -51,7 +54,8 @@
 |------|------|
 | [快速开始](docs/getting-started.md) | 三行代码抓取、运行内置示例、自定义爬虫、配置与命令行 |
 | [架构设计](docs/architecture.md) | Crawler 接口、Engine、SPI、默认实现、内部组件、扩展点 |
-| [示例详解](docs/examples.md) | `examples/demo` / `examples/jciyuan` / `examples/rss` |
+| [示例详解](docs/examples.md) | demo / jciyuan / rss / csv / markdown / json-api / xml |
+| [社区推广包](docs/PROMOTION.md) | Awesome / HN / Reddit / 中文社区文案 + tracking 表 |
 
 公开 API 参考 [pkg.go.dev](https://pkg.go.dev/jciyuan-spider/crawler)。
 
@@ -89,6 +93,7 @@ go run ./examples/rss -url examples/rss/sample.xml            # RSS/XML 源（�
 | [`examples/csv`](examples/csv) | 把 crawler Engine 抓取结果导出为 CSV（字段并集表头 + 自动转义） | `go run ./examples/csv -url https://example.com` |
 | [`examples/markdown`](examples/markdown) | 抓取 HTML 并导出 Markdown 文件（仅标准库的轻量 HTML→MD 转换） | `go run ./examples/markdown -url https://example.com` |
 | [`examples/json-api`](examples/json-api) | 抓取 JSON API 并输出结构化 item（JSON 数组展开为多条） | `go run ./examples/json-api -url https://httpbin.org/json` |
+| [`examples/xml`](examples/xml) | 抓取 XML/RSS/Atom 源并导出 CSV（复合场景：XML→结构化 item→CSV） | `go run ./examples/xml -url examples/xml/sample.xml` |
 
 ## 项目结构
 
