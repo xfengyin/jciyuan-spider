@@ -25,18 +25,24 @@ import (
 	"time"
 
 	"jciyuan-spider/crawler"
+	"jciyuan-spider/internal/version"
 )
 
 var (
-	urlFlag   = flag.String("url", "", "抓取目标 URL（多个用逗号分隔）")
-	outFlag   = flag.String("output", "", "输出目录（默认 ./output/markdown）")
-	concFlag  = flag.Int("concurrency", 3, "并发数")
-	retryFlag = flag.Int("max-retry", 2, "失败重试次数")
-	quietFlag = flag.Bool("quiet", false, "安静模式")
+	urlFlag     = flag.String("url", "", "抓取目标 URL（多个用逗号分隔）")
+	outFlag     = flag.String("output", "", "输出目录（默认 ./output/markdown）")
+	concFlag    = flag.Int("concurrency", 3, "并发数")
+	retryFlag   = flag.Int("max-retry", 2, "失败重试次数")
+	quietFlag   = flag.Bool("quiet", false, "安静模式")
+	versionFlag = flag.Bool("version", false, "打印版本信息")
 )
 
 func main() {
 	flag.Parse()
+	if *versionFlag {
+		fmt.Printf("jciyuan-spider markdown example %s\n", version.Version)
+		os.Exit(0)
+	}
 	if *urlFlag == "" {
 		fmt.Fprintln(os.Stderr, "请通过 -url 指定抓取目标，例如：\n"+
 			"  go run ./examples/markdown -url https://example.com")

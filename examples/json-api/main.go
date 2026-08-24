@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"jciyuan-spider/crawler"
+	"jciyuan-spider/internal/version"
 )
 
 // slideshowResp 对应 httpbin.org/json 的响应结构。
@@ -89,15 +90,20 @@ func (c *jsonAPICrawler) Extract(_ context.Context, parsed any) ([]crawler.Item,
 }
 
 var (
-	urlFlag   = flag.String("url", "https://httpbin.org/json", "JSON API 地址")
-	outFlag   = flag.String("output", "", "输出目录（默认 ./output/json-api）")
-	concFlag  = flag.Int("concurrency", 3, "并发数")
-	retryFlag = flag.Int("max-retry", 2, "失败重试次数")
-	quietFlag = flag.Bool("quiet", false, "安静模式")
+	urlFlag     = flag.String("url", "https://httpbin.org/json", "JSON API 地址")
+	outFlag     = flag.String("output", "", "输出目录（默认 ./output/json-api）")
+	concFlag    = flag.Int("concurrency", 3, "并发数")
+	retryFlag   = flag.Int("max-retry", 2, "失败重试次数")
+	quietFlag   = flag.Bool("quiet", false, "安静模式")
+	versionFlag = flag.Bool("version", false, "打印版本信息")
 )
 
 func main() {
 	flag.Parse()
+	if *versionFlag {
+		fmt.Printf("jciyuan-spider json-api example %s\n", version.Version)
+		os.Exit(0)
+	}
 
 	out := *outFlag
 	if out == "" {

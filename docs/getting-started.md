@@ -130,8 +130,26 @@ log:             # 级别、格式、文件轮转
 
 ## 6. 开发
 
+推荐使用根目录 [`Makefile`](../Makefile) 统一命令：
+
 ```bash
-go build ./...
-go vet ./...
-go test ./...
+make build          # 编译根 CLI 到 ./jciyuan-spider（VERSION 可覆盖：make build VERSION=v0.5.0）
+make test           # 运行全部单元测试
+make vet            # 静态检查
+make fmt            # gofmt 格式化
+make fmt-check      # 检查 gofmt（CI 用）
+make clean          # 清理构建产物
+make run-demo       # 运行任一示例（run-jciyuan / run-rss / run-csv / run-markdown / run-json-api / run-xml）
+make version        # 打印构建版本信息
 ```
+
+等价的原生命令：`go build ./...` / `go vet ./...` / `go test ./...`。
+
+### 版本输出
+
+- 全部 7 个示例 CLI（demo / jciyuan / rss / csv / markdown / json-api / xml）
+  支持 `--version`，统一输出 `jciyuan-spider <name> example <version>`。
+- 版本号集中维护于 [`internal/version`](../internal/version)（`const Version`），
+  与 [CHANGELOG](../CHANGELOG.md) 同步。
+- 根 CLI `./jciyuan-spider -version` 输出注入的版本/commit/构建时间
+  （`make build VERSION=v0.5.0` 可指定）。
