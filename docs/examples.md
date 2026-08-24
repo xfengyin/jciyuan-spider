@@ -10,6 +10,7 @@
 | [`examples/jciyuan`](../examples/jciyuan) | 复用内部企业级 Fetcher/Parser 的框架化实现，抓取 jciyuan.com 动漫详情页 | `go run ./examples/jciyuan -id 37439` |
 | [`examples/rss`](../examples/rss) | 用框架抓取并解析 RSS/XML 源，支持远程 URL 与本地文件（离线演示） | `go run ./examples/rss -url examples/rss/sample.xml` |
 | [`examples/csv`](../examples/csv) | 把 crawler Engine 抓取结果导出为 CSV | `go run ./examples/csv -url https://example.com` |
+| [`examples/markdown`](../examples/markdown) | 抓取 HTML 并导出 Markdown 文件（仅标准库转换） | `go run ./examples/markdown -url https://example.com` |
 
 ## 1. examples/demo —— 配置驱动通用爬虫
 
@@ -117,6 +118,38 @@ go run ./examples/csv -url https://example.com,https://example.org -output ./out
 - `run()` 封装「Engine 抓取」；`ItemsToCSV()` 独立成函数便于复用与单测。
 - 表头 = 所有 Item 字段名的排序并集；缺失字段留空，`[]string` 值以 `; ` 合并。
 - 嵌套结构（map/[]Item）以 `fmt.Sprint` 兜底，适合扁平化结果。
+
+## 5. examples/markdown —— 抓取 HTML 导出 Markdown
+
+演示把抓取到的 HTML 转成 Markdown 文件：复用 `crawler.Engine` + 默认 HTTP 爬虫抓取，
+再用内置的轻量 HTML→MD 转换器（仅标准库 `regexp`/`html`，不引入第三方库）生成 `.md` 文件。
+
+```bash
+go run ./examples/markdown -url https://example.com
+go run ./examples/markdown -url https://example.com,https://example.org -output ./output/markdown
+```
+
+| 参数 | 默认 | 说明 |
+|------|------|------|
+| `-url` | - | 抓取目标 URL，多个用逗号分隔（必填） |
+| `-output` | ./output/markdown | 输出目录（每页一个 `<slug>.md`） |
+| `-concurrency` | 3 | Engine 并发数 |
+| `-max-retry` | 2 | 失败重试次数 |
+| `-quiet` | false | 安静模式 |
+
+转换覆盖（`htmlToMarkdown`）：
+
+- 标题 `h1-h6` → `#`~`######`；链接 → `[text](href)`；图片 → `![alt](src)`
+- 列表项 → `- `；粗体/斜体 → `**text**`/`*text*`；行内代码 → `` `code` ``
+- 代码块 `<pre>` → 围栏代码块（占位保护，避免内部二次转换）
+- 引用 → `> `；`<br>` → 换行；`<hr>` → `---`
+- `<script>`/`<style>` 整块剔除；HTML 实体解码；其余标签剥离
+
+实现要点：
+
+- 全部转换用正则表达式完成（`` 边界防误匹配，如 `<strong>` 不会误伤 `<body>`）。
+- 文件名由 URL 生成（host+path 清洗保留点号），如 `https://example.com` → `example.com.md`。
+- `htmlToMarkdown()` 独立成函数便于单测；端到端走真实 Engine 链路。
 
 ## 输出格式
 
