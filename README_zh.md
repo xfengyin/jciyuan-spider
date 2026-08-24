@@ -32,6 +32,9 @@
 >
 > M7 里程碑：社区推广包（[`docs/PROMOTION.md`](docs/PROMOTION.md)）、
 > XML/RSS→CSV 复合示例（[`examples/xml`](examples/xml)）（当前 tag：v0.3.0）。
+>
+> M8 里程碑：根目录 [Makefile](Makefile)（build/test/vet/fmt/clean）、全部示例 CLI
+> 支持 `--version`、[CHANGELOG](CHANGELOG.md) v0.5.0 候选条目（当前 tag：v0.4.0）。
 
 ## 功能特性
 
@@ -112,11 +115,26 @@ jciyuan-spider/
 
 ## 开发
 
+推荐使用根目录 [`Makefile`](Makefile) 统一命令：
+
+```bash
+make build          # 编译根 CLI 到 ./jciyuan-spider（VERSION 可覆盖：make build VERSION=v0.5.0）
+make test           # 运行全部单元测试
+make vet            # 静态检查
+make fmt            # gofmt 格式化
+make clean          # 清理构建产物
+make run-demo       # 运行任一示例（run-jciyuan / run-rss / run-csv / run-markdown / run-json-api / run-xml）
+```
+
+等价的原生命令：
+
 ```bash
 go build ./...
 go vet ./...
 go test ./...
 ```
+
+所有示例 CLI 均支持 `--version` 统一输出版本（如 `jciyuan-spider demo example 0.5.0`）。
 
 ## 注意事项
 

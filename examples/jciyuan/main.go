@@ -24,6 +24,7 @@ import (
 	"jciyuan-spider/internal/metrics"
 	"jciyuan-spider/internal/model"
 	"jciyuan-spider/internal/parser"
+	"jciyuan-spider/internal/version"
 
 	// 副作用导入，触发 SPI 注册
 	_ "jciyuan-spider/internal/fetcher/http"
@@ -38,6 +39,7 @@ var (
 	concurrency = flag.Int("concurrency", 3, "并发数")
 	maxRetry    = flag.Int("max-retry", 3, "失败重试次数")
 	quietFlag   = flag.Bool("quiet", false, "安静模式")
+	versionFlag = flag.Bool("version", false, "打印版本信息")
 )
 
 // jciyuanCrawler 将内部 Fetcher/Parser 适配为框架的 Crawler 接口。
@@ -153,6 +155,10 @@ func buildURL(cfg *model.Config, id int64) string {
 
 func main() {
 	flag.Parse()
+	if *versionFlag {
+		fmt.Printf("jciyuan-spider jciyuan example %s\n", version.Version)
+		os.Exit(0)
+	}
 
 	cfg := &model.Config{}
 	if c, err := config.NewLoader(*configPath).Load(); err == nil {

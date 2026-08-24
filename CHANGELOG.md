@@ -4,7 +4,30 @@
 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循
 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased] — v0.3.0 候选
+## [Unreleased] — v0.5.0 候选
+
+### Added
+
+- 新增根目录 `Makefile`：`build` / `test` / `vet` / `fmt` / `fmt-check` / `clean` /
+  `tidy` / `version` 与 7 个 `run-*` 示例目标，统一开发体验。
+- 全部 7 个示例 CLI（demo / jciyuan / rss / csv / markdown / json-api / xml）
+  新增 `--version` 参数，统一输出 `jciyuan-spider <name> example <version>`；
+  版本号集中维护于 `internal/version`，与 CHANGELOG 同步。
+- 文档：README/README_zh 与 `docs/getting-started.md` 补充 Makefile 用法与
+  `--version` 说明。
+
+## [v0.4.0] - 2026-08-24
+
+### Added
+
+- 新增 [`docs/PROMOTION.md`](docs/PROMOTION.md) 社区推广包：Awesome Go（英/中）
+  投稿文案、Hacker News / Reddit 帖子草稿、中文社区文案（掘金/知乎/V2EX/公众号）、
+  发布渠道 tracking 表与发布注意事项。
+- 新增 [`examples/xml`](examples/xml)：抓取 XML/RSS/Atom 源并导出 CSV
+  （复合场景，Parse 自动识别 RSS 2.0 与 Atom），含本地文件离线演示与单测。
+- 文档：`docs/examples.md`、`examples/README.md`、README 示例表同步。
+
+## [v0.3.0] - 2026-08-24
 
 ### Added
 
@@ -12,8 +35,7 @@
   `httpbin.org/json` 或任意 JSON 接口），Parse 用 `encoding/json` 解析
   （优先匹配 slideshow 结构，不匹配回退为原始 map），Extract 将 JSON 数组
   展开为多条结构化 item；含本地 mock server 单测（无需网络）。
-- 文档：`docs/examples.md` 新增 json-api 详解；`examples/README.md`、
-  `README.md`/`README_zh.md` 示例表同步。
+- 新增 `CHANGELOG.md`；文档：`docs/examples.md`、README 示例表同步。
 
 ## [v0.2.0] - 2026-08-24
 

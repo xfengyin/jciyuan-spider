@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"jciyuan-spider/crawler"
+	"jciyuan-spider/internal/version"
 )
 
 // rssDoc RSS 2.0 文档结构。
@@ -179,13 +180,18 @@ func csvString(v any) string {
 }
 
 var (
-	urlFlag   = flag.String("url", "", "XML/RSS/Atom 源：http(s):// 远程 URL 或本地文件路径")
-	outFlag   = flag.String("output", "", "CSV 输出路径（默认 ./output/xml/feed.csv）")
-	quietFlag = flag.Bool("quiet", false, "安静模式")
+	urlFlag     = flag.String("url", "", "XML/RSS/Atom 源：http(s):// 远程 URL 或本地文件路径")
+	outFlag     = flag.String("output", "", "CSV 输出路径（默认 ./output/xml/feed.csv）")
+	quietFlag   = flag.Bool("quiet", false, "安静模式")
+	versionFlag = flag.Bool("version", false, "打印版本信息")
 )
 
 func main() {
 	flag.Parse()
+	if *versionFlag {
+		fmt.Printf("jciyuan-spider xml example %s\n", version.Version)
+		os.Exit(0)
+	}
 	if *urlFlag == "" {
 		fmt.Fprintln(os.Stderr, "请通过 -url 指定 XML/RSS 源，例如：\n"+
 			"  go run ./examples/xml -url examples/xml/sample.xml\n"+
