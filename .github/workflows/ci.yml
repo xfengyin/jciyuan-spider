@@ -61,7 +61,7 @@ jobs:
 
       # 上传构建产物（便于调试）
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: binaries-${{ matrix.go-version }}
           path: dist/*
