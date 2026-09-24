@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         # 与 go.mod 保持一致，避免工具链自动降级/升级带来的不确定性
-        go-version: ["1.25"]
+        go-version: ["1.26"]
 
     steps:
       # 检出代码
