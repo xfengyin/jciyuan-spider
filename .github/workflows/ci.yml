@@ -60,7 +60,16 @@ jobs:
         run: go test -race -cover ./...
 
       # 上传构建产物（便于调试）
-      - name: Upload build artifacts
+      - name: Upload build artifacts (Gitea)
+        if: github.server_url != 'https://github.com'
+        uses: actions/upload-artifact@v3
+        with:
+          name: binaries-${{ matrix.go-version }}
+          path: dist/*
+          retention-days: 3
+
+      - name: Upload build artifacts (GitHub)
+        if: github.server_url == 'https://github.com'
         uses: actions/upload-artifact@v6
         with:
           name: binaries-${{ matrix.go-version }}
