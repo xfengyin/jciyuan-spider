@@ -58,7 +58,16 @@ jobs:
               jciyuan-spider-${{ matrix.os }}-${{ matrix.arch }}
           fi
 
-      - name: Upload build artifacts
+      - name: Upload build artifacts (Gitea)
+        if: github.server_url != 'https://github.com'
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-${{ matrix.os }}-${{ matrix.arch }}
+          path: dist/
+          retention-days: 3
+
+      - name: Upload build artifacts (GitHub)
+        if: github.server_url == 'https://github.com'
         uses: actions/upload-artifact@v6
         with:
           name: dist-${{ matrix.os }}-${{ matrix.arch }}
@@ -70,7 +79,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download build artifacts
+      - name: Download build artifacts (Gitea)
+        if: github.server_url != 'https://github.com'
+        uses: actions/download-artifact@v3
+        with:
+          path: dist/
+          merge-multiple: true
+
+      - name: Download build artifacts (GitHub)
+        if: github.server_url == 'https://github.com'
         uses: actions/download-artifact@v7
         with:
           path: dist/
