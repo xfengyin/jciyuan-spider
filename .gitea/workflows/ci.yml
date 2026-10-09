@@ -16,7 +16,7 @@ on:
 jobs:
   lint-build-test:
     name: Lint / Build / Test
-    runs-on: ubuntu-latest
+    runs-on: amd64
     strategy:
       matrix:
         # 与 go.mod 保持一致，避免工具链自动降级/升级带来的不确定性

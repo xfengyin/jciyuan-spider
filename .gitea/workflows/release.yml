@@ -13,7 +13,7 @@ permissions:
 jobs:
   build:
     name: Build (${{ matrix.os }}-${{ matrix.arch }})
-    runs-on: ubuntu-latest
+    runs-on: amd64
     strategy:
       fail-fast: false
       matrix:
