@@ -82,7 +82,8 @@ jobs:
   release:
     name: Create GitHub Release
     needs: build
-    runs-on: ubuntu-latest
+    # 只有 NAS runner 配了 github_mirror；落到 1.4G 的 Pi 上连 action 都拉不下来（实测 task 1074 7s 即败）
+    runs-on: ${{ github.server_url == 'https://github.com' && 'ubuntu-latest' || 'amd64' }}
     steps:
       - name: Download build artifacts (Gitea)
         if: github.server_url != 'https://github.com'
