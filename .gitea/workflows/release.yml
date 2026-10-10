@@ -17,6 +17,7 @@ env:
   GOSUMDB: sum.golang.google.cn
 jobs:
   build:
+    timeout-minutes: 90  # 防挂死：实测本 Gitea 会执行这个上限（orangepi task1126 在 60.1 分钟被切断并 FAIL）
     name: Build (${{ matrix.os }}-${{ matrix.arch }})
     runs-on: amd64
     strategy:
@@ -80,6 +81,7 @@ jobs:
           retention-days: 3
 
   release:
+    timeout-minutes: 90  # 防挂死：实测本 Gitea 会执行这个上限（orangepi task1126 在 60.1 分钟被切断并 FAIL）
     name: Create GitHub Release
     needs: build
     # 只有 NAS runner 配了 github_mirror；落到 1.4G 的 Pi 上连 action 都拉不下来（实测 task 1074 7s 即败）

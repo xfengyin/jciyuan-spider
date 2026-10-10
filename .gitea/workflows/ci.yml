@@ -26,6 +26,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   lint-build-test:
+    timeout-minutes: 60  # 防挂死：实测本 Gitea 会执行这个上限（orangepi task1126 在 60.1 分钟被切断并 FAIL）
     name: Lint / Build / Test
     runs-on: amd64
     strategy:
