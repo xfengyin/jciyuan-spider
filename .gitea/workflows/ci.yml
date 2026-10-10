@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
-          cache: true
+          cache: ${{ github.server_url == 'https://github.com' }}
 
       # 下载依赖
       - name: Download dependencies

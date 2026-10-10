@@ -35,7 +35,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "1.25" # 与 go.mod 保持一致
-          cache: true
+          cache: ${{ github.server_url == 'https://github.com' }}
 
       - name: Build binary
         env:
