@@ -13,6 +13,11 @@ on:
       - master
       - develop
 
+# runner 只配了单个 goproxy.cn，偶发 TLS handshake timeout 会让整个 job 失败
+# （2026-10-10 实测 run#950：Download dependencies 16s 即挂）。加兜底，go 会顺次尝试。
+env:
+  GOPROXY: https://goproxy.cn,https://mirrors.aliyun.com/goproxy/,https://goproxy.io,direct
+  GOSUMDB: sum.golang.google.cn
 jobs:
   lint-build-test:
     name: Lint / Build / Test
