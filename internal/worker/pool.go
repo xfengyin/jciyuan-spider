@@ -101,7 +101,11 @@ func (p *Pool) loop() {
 				return
 			}
 			// 并发上限由「workers 个 goroutine」本身保证，不需要额外信号量。
-			// 这里只保留原来 Acquire 的另一个作用：池已取消时不再启动队列里的下一个任务。
+			//
+			// 下面这个 ctx 检查不是冗余的，也别删：这里原本是 semaphore.Weighted 的 Acquire
+			// （容量 == workers，所以它从不阻塞），它唯一真正起的作用就是「池已取消时不再
+			// 启动队列里的下一个任务」。信号量删掉后，由这一句保留那个行为 ——
+			// 删掉它会多跑一个任务，TestPoolCancelPreventsFurtherTasks 会红。
 			if p.ctx.Err() != nil {
 				return
 			}
