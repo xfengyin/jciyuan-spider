@@ -16,19 +16,19 @@ import (
 	"strings"
 	"time"
 
-	"jciyuan-spider/crawler"
-	"jciyuan-spider/internal/config"
-	"jciyuan-spider/internal/di"
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/logger"
-	"jciyuan-spider/internal/metrics"
-	"jciyuan-spider/internal/model"
-	"jciyuan-spider/internal/parser"
-	"jciyuan-spider/internal/version"
+	"github.com/xfengyin/jciyuan-spider/crawler"
+	"github.com/xfengyin/jciyuan-spider/internal/config"
+	"github.com/xfengyin/jciyuan-spider/internal/di"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/logger"
+	"github.com/xfengyin/jciyuan-spider/internal/metrics"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/parser"
+	"github.com/xfengyin/jciyuan-spider/internal/version"
 
 	// 副作用导入，触发 SPI 注册
-	_ "jciyuan-spider/internal/fetcher/http"
-	_ "jciyuan-spider/internal/parser/html"
+	_ "github.com/xfengyin/jciyuan-spider/internal/fetcher/http"
+	_ "github.com/xfengyin/jciyuan-spider/internal/parser/html"
 )
 
 var (

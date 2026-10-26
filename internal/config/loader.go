@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
 
 	"gopkg.in/yaml.v3"
 )

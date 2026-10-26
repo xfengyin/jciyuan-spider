@@ -22,8 +22,8 @@ import (
 	"strings"
 	"time"
 
-	"jciyuan-spider/crawler"
-	"jciyuan-spider/internal/version"
+	"github.com/xfengyin/jciyuan-spider/crawler"
+	"github.com/xfengyin/jciyuan-spider/internal/version"
 )
 
 // rssDoc RSS 2.0 文档结构。

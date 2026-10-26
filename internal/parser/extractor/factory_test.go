@@ -6,8 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"jciyuan-spider/internal/model"
-	"jciyuan-spider/internal/parser"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/parser"
 )
 
 // TestFactoryBuildsAllTypes 验证工厂能构造三种选择器。

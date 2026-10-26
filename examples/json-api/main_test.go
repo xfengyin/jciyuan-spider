@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"jciyuan-spider/crawler"
+	"github.com/xfengyin/jciyuan-spider/crawler"
 )
 
 // sampleSlideshow 与 httpbin.org/json 结构一致，供本地 mock 服务返回。

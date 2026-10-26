@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"jciyuan-spider/internal/model"
-	"jciyuan-spider/internal/storage"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/storage"
 )
 
 // cacheItem 是带过期时间的缓存项。

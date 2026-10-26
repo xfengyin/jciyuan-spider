@@ -1,8 +1,8 @@
 package spider
 
 import (
-	"jciyuan-spider/internal/logger"
-	"jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/logger"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
 )
 
 // showSummary 显示爬取摘要。

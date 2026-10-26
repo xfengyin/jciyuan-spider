@@ -7,7 +7,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 
-	"jciyuan-spider/internal/parser"
+	"github.com/xfengyin/jciyuan-spider/internal/parser"
 )
 
 // CSSExtractor 基于 CSS Selector 的字段提取器。

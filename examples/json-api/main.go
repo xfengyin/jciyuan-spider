@@ -19,8 +19,8 @@ import (
 	"strings"
 	"time"
 
-	"jciyuan-spider/crawler"
-	"jciyuan-spider/internal/version"
+	"github.com/xfengyin/jciyuan-spider/crawler"
+	"github.com/xfengyin/jciyuan-spider/internal/version"
 )
 
 // slideshowResp 对应 httpbin.org/json 的响应结构。

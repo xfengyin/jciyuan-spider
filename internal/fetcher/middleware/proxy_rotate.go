@@ -9,9 +9,9 @@ import (
 	"net/url"
 	"sync"
 
-	spidererrors "jciyuan-spider/internal/errors"
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/model"
+	spidererrors "github.com/xfengyin/jciyuan-spider/internal/errors"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
 )
 
 // ProxyManager 代理池管理器，支持 round_robin/random/least_used 策略。

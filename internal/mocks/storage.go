@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"jciyuan-spider/internal/model"
-	"jciyuan-spider/internal/storage"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/storage"
 )
 
 // compile-time 接口校验。

@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
 )
 
 // newTestAnime 返回一个用于测试的 AnimeInfo 实例。

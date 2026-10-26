@@ -20,8 +20,8 @@ import (
 	"strings"
 	"time"
 
-	"jciyuan-spider/crawler"
-	"jciyuan-spider/internal/version"
+	"github.com/xfengyin/jciyuan-spider/crawler"
+	"github.com/xfengyin/jciyuan-spider/internal/version"
 
 	"github.com/PuerkitoBio/goquery"
 	"gopkg.in/yaml.v3"

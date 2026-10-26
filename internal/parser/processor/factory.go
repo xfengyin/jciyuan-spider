@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
 )
 
 // Build 根据 ProcessorConfig 构造对应类型的后处理器。

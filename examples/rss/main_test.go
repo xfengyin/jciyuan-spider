@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"jciyuan-spider/crawler"
+	"github.com/xfengyin/jciyuan-spider/crawler"
 )
 
 // TestRSSCrawlerLocalFile 用本地 sample.xml 走完整 Engine 链路（无需网络）。

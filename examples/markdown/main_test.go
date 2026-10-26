@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"jciyuan-spider/crawler"
+	"github.com/xfengyin/jciyuan-spider/crawler"
 )
 
 const sampleHTML = `<!doctype html>
