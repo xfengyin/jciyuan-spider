@@ -10,12 +10,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # 保持 job id 为 test：本仓当前唯一被观察到的 check-run context 就是 'test'（PR #27 实测），
+  # 改 id 会让既有的观察结果失效。
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: '1.25'
-      - name: go test
-        run: go test ./...
+      - name: go vet
+        run: go vet ./...
+      - name: go test -race
+        run: go test -race -count=1 ./...
+
+  # 汇总闸门：分支保护的 required_status_checks 最终要指到这个 context。
+  # 用 != "success" 而不是 == "failure"：cancelled / skipped / timed_out 都不是 failure。
+  ci-summary:
+    name: ci-summary
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [test]
+    if: always()
+    steps:
+      - name: Check all gates
+        run: |
+          echo "test=${{ needs.test.result }}"
+          if [ "${{ needs.test.result }}" != "success" ]; then
+            echo "::error::test did not succeed (result=${{ needs.test.result }})"
+            exit 1
+          fi
