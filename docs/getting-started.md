@@ -125,6 +125,10 @@ metrics:         # memory|prometheus（prometheus 时暴露 /metrics 与 /health
 log:             # 级别、格式、文件轮转
 ```
 
+`parser.html.extractors[].selector.type` 支持 **`css`** 与 **`regex`** 两种取值；
+**`xpath` 已于 2026-10 移除**（`golang.org/x/net/html` 之上的 XPath 链没有任何配置在用，
+需要按结构取值的场景用 CSS 选择器覆盖，需要按文本模式取值的用正则）。
+
 配置可被 `JCIYUAN_*` 环境变量与命令行 flag 覆盖；配置文件缺失时回退到内置默认配置。
 框架示例（`examples/demo`）使用自己的 YAML 任务配置，见 [examples/demo/config.yaml](../examples/demo/config.yaml)。
 

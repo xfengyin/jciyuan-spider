@@ -10,7 +10,7 @@ import (
 	"github.com/xfengyin/jciyuan-spider/internal/parser"
 )
 
-// TestFactoryBuildsAllTypes 验证工厂能构造三种选择器。
+// TestFactoryBuildsAllTypes 验证工厂能构造全部注册的选择器类型（css / regex）。
 func TestFactoryBuildsAllTypes(t *testing.T) {
 	cases := []struct {
 		name string
@@ -18,7 +18,6 @@ func TestFactoryBuildsAllTypes(t *testing.T) {
 	}{
 		{"regex", model.SelectorConfig{Type: "regex", Value: "test"}},
 		{"css", model.SelectorConfig{Type: "css", Value: "h1", Attr: "class"}},
-		{"xpath", model.SelectorConfig{Type: "xpath", Value: "//h1", Attr: "id"}},
 	}
 
 	for _, tc := range cases {

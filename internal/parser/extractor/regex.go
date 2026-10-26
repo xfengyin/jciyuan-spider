@@ -1,4 +1,4 @@
-// Package extractor 提供 Regex/CSS/XPath 三种字段提取器实现。
+// Package extractor 提供 CSS/Regex 两种字段提取器实现。
 package extractor
 
 import (

@@ -44,6 +44,7 @@
 | ⚙️ **通用 Engine** | 并发 Worker、失败重试、请求间隔限速、超时控制、JSON Lines 输出 |
 | 🔌 **SPI 注册机制** | `crawler.Register` / `crawler.Build`，按名称装配爬虫实现 |
 | 🎯 **示例开箱即用** | [`examples/demo`](examples/demo)、[`examples/jciyuan`](examples/jciyuan)、[`examples/rss`](examples/rss) |
+| 🎯 **字段提取** | `parser.html.extractors` 支持 CSS 选择器与正则（`type: css` / `type: regex`）；XPath 已于 2026-10 移除，见 [docs/getting-started.md](docs/getting-started.md) |
 | 🧱 **企业级组件（内部）** | Fetcher 中间件链（trace/metrics/限流/重试/熔断/代理轮换）、抗反爬、可插拔存储后端 |
 | 📦 **存储后端** | JSON（默认）+ 内存缓存装饰器；经 SPI 可扩展 |
 | 🔄 **断点续爬** | 爬取状态持久化，中断后可恢复；支持增量合并保留已抓取的 M3U8 |
