@@ -16,8 +16,8 @@ type LogEntry struct {
 
 // MockLogger 实现 logger.Logger 接口，用于测试中断言日志输出。
 type MockLogger struct {
-	mu          sync.RWMutex
-	entries     *[]LogEntry
+	mu           sync.RWMutex
+	entries      *[]LogEntry
 	prefixFields []logger.Field
 }
 
