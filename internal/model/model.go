@@ -88,11 +88,11 @@ type AppConfig struct {
 type SpiderConfig struct {
 	BaseURL          string `yaml:"base_url"`
 	DetailURLPattern string `yaml:"detail_url_pattern"`
-	Delay            int    `yaml:"delay"`          // 请求间隔 ms
-	Timeout          int    `yaml:"timeout"`        // 请求超时 s
-	MaxRetry         int    `yaml:"max_retry"`      // 最大重试次数
-	Concurrency      int    `yaml:"concurrency"`    // 全局并发 Worker 数
-	QueueSize        int    `yaml:"queue_size"`     // 任务队列长度
+	Delay            int    `yaml:"delay"`       // 请求间隔 ms
+	Timeout          int    `yaml:"timeout"`     // 请求超时 s
+	MaxRetry         int    `yaml:"max_retry"`   // 最大重试次数
+	Concurrency      int    `yaml:"concurrency"` // 全局并发 Worker 数
+	QueueSize        int    `yaml:"queue_size"`  // 任务队列长度
 }
 
 // AnticrawlerConfig 反爬与浏览器指纹配置
@@ -210,10 +210,10 @@ type OutputConfig struct {
 
 // CrawlConfig 爬取任务配置
 type CrawlConfig struct {
-	AnimeID        int64 `yaml:"anime_id"`
-	Resume         bool  `yaml:"resume"`
-	Incremental    bool  `yaml:"incremental"`
-	MaxEpisodes    int   `yaml:"max_episodes"` // 0=全部
+	AnimeID     int64 `yaml:"anime_id"`
+	Resume      bool  `yaml:"resume"`
+	Incremental bool  `yaml:"incremental"`
+	MaxEpisodes int   `yaml:"max_episodes"` // 0=全部
 }
 
 // MiddlewareItem 中间件配置项

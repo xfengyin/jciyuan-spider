@@ -18,29 +18,29 @@ func newTestParser() *HTMLParser {
 		Encoding: "utf-8",
 		Extractors: []model.ExtractorConfig{
 			{
-				Field: "title",
+				Field:    "title",
 				Selector: model.SelectorConfig{Type: "css", Value: "h1.title"},
 				Processors: []model.ProcessorConfig{
 					{Type: "trim"},
 				},
 			},
 			{
-				Field: "description",
+				Field:    "description",
 				Selector: model.SelectorConfig{Type: "css", Value: "p.desc"},
 				Processors: []model.ProcessorConfig{
 					{Type: "clean_text"},
 				},
 			},
 			{
-				Field:    "tags",
-				Selector: model.SelectorConfig{Type: "css", Value: "span.tag"},
-				Multiple: true,
+				Field:       "tags",
+				Selector:    model.SelectorConfig{Type: "css", Value: "span.tag"},
+				Multiple:    true,
 				Deduplicate: true,
 			},
 			{
-				Field:    "episodes",
-				Selector: model.SelectorConfig{Type: "regex", Value: `/acgplay/(\d+)-(\d+)-(\d+)\.html`},
-				Multiple: true,
+				Field:       "episodes",
+				Selector:    model.SelectorConfig{Type: "regex", Value: `/acgplay/(\d+)-(\d+)-(\d+)\.html`},
+				Multiple:    true,
 				Deduplicate: true,
 			},
 		},

@@ -96,9 +96,9 @@ func TestLoggingSanitizesHeaders(t *testing.T) {
 	_, err := handler(context.Background(), &fetcher.Request{
 		URL: "http://example.com",
 		Headers: map[string]string{
-			"Accept":             "text/html",
-			"Cookie":             "session=abc; token=xyz",
-			"Authorization":      "Bearer secret-token",
+			"Accept":              "text/html",
+			"Cookie":              "session=abc; token=xyz",
+			"Authorization":       "Bearer secret-token",
 			"Proxy-Authorization": "Basic dXNlcjpwYXNz",
 		},
 	})

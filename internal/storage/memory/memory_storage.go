@@ -12,8 +12,8 @@ import (
 
 // cacheItem 是带过期时间的缓存项。
 type cacheItem[T any] struct {
-	value      T
-	expireAt   time.Time
+	value    T
+	expireAt time.Time
 }
 
 // MemoryStorage 内存缓存存储（装饰器模式）。

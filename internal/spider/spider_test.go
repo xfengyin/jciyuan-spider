@@ -78,10 +78,10 @@ func TestSpiderCrawlDetailSuccess(t *testing.T) {
 
 	mp.SetResult(detailURL, &parser.ParseResult{
 		Anime: &model.AnimeInfo{
-			ID:          37439,
-			Title:       "测试动漫",
-			Episodes:    []model.Episode{{Number: 1, URL: "https://example.com/acgplay/37439-1-1.html"}},
-			EpisodeNum:  1,
+			ID:         37439,
+			Title:      "测试动漫",
+			Episodes:   []model.Episode{{Number: 1, URL: "https://example.com/acgplay/37439-1-1.html"}},
+			EpisodeNum: 1,
 		},
 		RawHTML: []byte("<html></html>"),
 	}, nil)
@@ -139,8 +139,8 @@ func TestSpiderIncrementalMergeEpisodes(t *testing.T) {
 	// 新数据：第1集与第2集，但都没有 M3U8。
 	mp.SetResult(detailURL, &parser.ParseResult{
 		Anime: &model.AnimeInfo{
-			ID:         37439,
-			Title:      "新标题",
+			ID:    37439,
+			Title: "新标题",
 			Episodes: []model.Episode{
 				{Number: 1, URL: "https://example.com/acgplay/37439-1-1.html"},
 				{Number: 2, URL: "https://example.com/acgplay/37439-1-2.html"},

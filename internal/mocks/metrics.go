@@ -11,17 +11,17 @@ import (
 
 // MockMetrics 实现 metrics.Metrics 接口，用于测试中断言计数变化。
 type MockMetrics struct {
-	mu        sync.RWMutex
-	success   int64
-	fail      int64
-	retry     int64
-	parse     int64
-	parseFail int64
-	storage   int64
+	mu          sync.RWMutex
+	success     int64
+	fail        int64
+	retry       int64
+	parse       int64
+	parseFail   int64
+	storage     int64
 	storageFail int64
-	bytes     int64
-	queueSize int
-	cbState   int
+	bytes       int64
+	queueSize   int
+	cbState     int
 }
 
 // compile-time 接口校验。

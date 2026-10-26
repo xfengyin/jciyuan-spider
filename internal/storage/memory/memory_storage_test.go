@@ -14,10 +14,10 @@ import (
 
 // mockPersistence 是一个极简的持久化存储，用于验证内存装饰器是否回写。
 type mockPersistence struct {
-	saved   []*model.AnimeInfo
-	status  *model.CrawlStatus
-	loadFn  func(ctx context.Context, id int64) (*model.AnimeInfo, error)
-	exists  map[int64]bool
+	saved  []*model.AnimeInfo
+	status *model.CrawlStatus
+	loadFn func(ctx context.Context, id int64) (*model.AnimeInfo, error)
+	exists map[int64]bool
 }
 
 func (m *mockPersistence) Save(ctx context.Context, anime *model.AnimeInfo) error {

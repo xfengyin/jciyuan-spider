@@ -109,10 +109,10 @@ func TestJSONStorageSaveAndLoadStatus(t *testing.T) {
 	require.NoError(t, err)
 
 	status := &model.CrawlStatus{
-		AnimeID:     100,
-		Status:      "running",
+		AnimeID:      100,
+		Status:       "running",
 		CurrentIndex: 5,
-		TotalCount:  10,
+		TotalCount:   10,
 	}
 	require.NoError(t, s.SaveStatus(context.Background(), status))
 
