@@ -113,8 +113,6 @@ release:
     - **Windows**：下载对应 zip，解压后 `jciyuan-spider.exe -help`
     - **校验**：使用 `sha256sum -c checksums.txt`（Linux/macOS）或 `CertUtil -hashfile xxx.zip SHA256`（Windows）
 
-    > 注意：Release 二进制默认关闭 CGO，SQLite 存储后端不可用；如需 SQLite，请使用 `CGO_ENABLED=1 go build` 本地编译。
-
 # 源码归档（可选，GitHub 会自动提供，GoReleaser 可不重复生成）
 source:
   enabled: true

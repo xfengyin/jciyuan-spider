@@ -132,9 +132,6 @@ func (l *Loader) applyDefaults(cfg *model.Config) {
 	if cfg.Storage.JSON.OutputDir == "" {
 		cfg.Storage.JSON.OutputDir = "./output"
 	}
-	if cfg.Storage.SQLite.DSN == "" {
-		cfg.Storage.SQLite.DSN = "./data/spider.db"
-	}
 
 	if len(cfg.Anticrawler.UserAgents) == 0 {
 		cfg.Anticrawler.UserAgents = defaultUserAgents()
