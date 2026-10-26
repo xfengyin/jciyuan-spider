@@ -14,8 +14,6 @@ func Build(cfg model.SelectorConfig) (parser.Extractor, error) {
 		return NewRegexExtractor(cfg.Type, cfg.Value)
 	case "css":
 		return NewCSSExtractor(cfg.Type, cfg.Value, cfg.Attr), nil
-	case "xpath":
-		return NewXPathExtractor(cfg.Type, cfg.Value, cfg.Attr), nil
 	default:
 		return nil, fmt.Errorf("未知的选择器类型: %s", cfg.Type)
 	}

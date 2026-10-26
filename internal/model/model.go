@@ -170,9 +170,9 @@ type ExtractorConfig struct {
 
 // SelectorConfig 选择器配置
 type SelectorConfig struct {
-	Type  string `yaml:"type"` // css | xpath | regex
+	Type  string `yaml:"type"` // css | regex
 	Value string `yaml:"value"`
-	Attr  string `yaml:"attr,omitempty"` // css/xpath 提取属性名，空则提取文本
+	Attr  string `yaml:"attr,omitempty"` // css 提取属性名，空则提取文本
 }
 
 // ProcessorConfig 字段后处理器配置
