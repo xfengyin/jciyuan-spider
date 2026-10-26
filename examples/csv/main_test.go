@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"jciyuan-spider/crawler"
+	"github.com/xfengyin/jciyuan-spider/crawler"
 )
 
 // TestItemsToCSV 校验表头、行对齐与 CSV 转义（逗号/引号）。

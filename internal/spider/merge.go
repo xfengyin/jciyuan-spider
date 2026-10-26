@@ -4,7 +4,7 @@ import (
 	"context"
 	"sort"
 
-	"jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
 )
 
 // mergeWithOld 加载旧数据并与新解析数据合并，实现增量更新。

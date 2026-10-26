@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	spidererrors "jciyuan-spider/internal/errors"
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/model"
+	spidererrors "github.com/xfengyin/jciyuan-spider/internal/errors"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
 )
 
 // TestProxyRotateOnRetryableError 验证遇到可重试错误时会自动切换代理。

@@ -1,4 +1,4 @@
-module jciyuan-spider
+module github.com/xfengyin/jciyuan-spider
 
 go 1.25.0
 

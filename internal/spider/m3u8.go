@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"regexp"
 
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
 )
 
 // m3u8Pattern 用于从播放页 HTML 中简单匹配 M3U8 URL。

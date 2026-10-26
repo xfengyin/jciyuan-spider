@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"jciyuan-spider/internal/logger"
+	"github.com/xfengyin/jciyuan-spider/internal/logger"
 )
 
 // LogEntry 记录一次日志调用。

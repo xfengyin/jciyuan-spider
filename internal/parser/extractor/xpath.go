@@ -8,7 +8,7 @@ import (
 	"github.com/antchfx/htmlquery"
 	"golang.org/x/net/html"
 
-	"jciyuan-spider/internal/parser"
+	"github.com/xfengyin/jciyuan-spider/internal/parser"
 )
 
 // XPathExtractor 基于 XPath 的字段提取器。

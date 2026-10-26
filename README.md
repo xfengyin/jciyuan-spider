@@ -60,7 +60,7 @@
 | [示例详解](docs/examples.md) | demo / jciyuan / rss / csv / markdown / json-api / xml |
 | [社区推广包](docs/PROMOTION.md) | Awesome / HN / Reddit / 中文社区文案 + tracking 表 |
 
-公开 API 参考 [pkg.go.dev](https://pkg.go.dev/jciyuan-spider/crawler)。
+公开 API 参考 [pkg.go.dev](https://pkg.go.dev/github.com/xfengyin/jciyuan-spider/crawler)。
 
 ## 快速开始
 

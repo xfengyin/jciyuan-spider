@@ -9,12 +9,12 @@ import (
 	"strconv"
 	"time"
 
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/logger"
-	"jciyuan-spider/internal/model"
-	"jciyuan-spider/internal/parser"
-	"jciyuan-spider/internal/parser/extractor"
-	"jciyuan-spider/internal/parser/processor"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/logger"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/parser"
+	"github.com/xfengyin/jciyuan-spider/internal/parser/extractor"
+	"github.com/xfengyin/jciyuan-spider/internal/parser/processor"
 )
 
 // HTMLParser 配置驱动的 HTML 解析器。

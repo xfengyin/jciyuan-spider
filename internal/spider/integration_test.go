@@ -13,14 +13,14 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	httpfetcher "jciyuan-spider/internal/fetcher/http"
-	"jciyuan-spider/internal/logger"
-	"jciyuan-spider/internal/metrics"
-	"jciyuan-spider/internal/model"
-	htmlparser "jciyuan-spider/internal/parser/html"
-	"jciyuan-spider/internal/resume"
-	jsonstorage "jciyuan-spider/internal/storage/json"
-	"jciyuan-spider/internal/worker"
+	httpfetcher "github.com/xfengyin/jciyuan-spider/internal/fetcher/http"
+	"github.com/xfengyin/jciyuan-spider/internal/logger"
+	"github.com/xfengyin/jciyuan-spider/internal/metrics"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
+	htmlparser "github.com/xfengyin/jciyuan-spider/internal/parser/html"
+	"github.com/xfengyin/jciyuan-spider/internal/resume"
+	jsonstorage "github.com/xfengyin/jciyuan-spider/internal/storage/json"
+	"github.com/xfengyin/jciyuan-spider/internal/worker"
 )
 
 // newIntegrationServer 启动本地测试服务器，返回服务端点。

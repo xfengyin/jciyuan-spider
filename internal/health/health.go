@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
-	"jciyuan-spider/internal/logger"
-	"jciyuan-spider/internal/metrics"
-	"jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/logger"
+	"github.com/xfengyin/jciyuan-spider/internal/metrics"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
 )
 
 // Checker 健康检查服务，负责启动 HTTP server 并响应 /healthz。

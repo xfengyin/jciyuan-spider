@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/parser"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/parser"
 )
 
 // MockParser 实现 parser.Parser 接口，按输入 URL 返回预设解析结果。

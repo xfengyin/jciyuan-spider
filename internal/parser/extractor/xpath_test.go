@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"jciyuan-spider/internal/parser"
+	"github.com/xfengyin/jciyuan-spider/internal/parser"
 )
 
 // TestXPathExtractorText 验证 XPath 提取节点文本。

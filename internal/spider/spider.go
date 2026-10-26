@@ -7,14 +7,14 @@ import (
 	"sync"
 	"time"
 
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/logger"
-	"jciyuan-spider/internal/metrics"
-	"jciyuan-spider/internal/model"
-	"jciyuan-spider/internal/parser"
-	"jciyuan-spider/internal/resume"
-	"jciyuan-spider/internal/storage"
-	"jciyuan-spider/internal/worker"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/logger"
+	"github.com/xfengyin/jciyuan-spider/internal/metrics"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/parser"
+	"github.com/xfengyin/jciyuan-spider/internal/resume"
+	"github.com/xfengyin/jciyuan-spider/internal/storage"
+	"github.com/xfengyin/jciyuan-spider/internal/worker"
 )
 
 // State 定义爬虫状态机的可能状态。

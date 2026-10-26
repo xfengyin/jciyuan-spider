@@ -5,8 +5,8 @@ import (
 	"context"
 	"time"
 
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/metrics"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/metrics"
 )
 
 // MetricsMiddleware 调用 metrics.Metrics 记录请求数、延迟与状态码。

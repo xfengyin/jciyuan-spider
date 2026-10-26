@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"jciyuan-spider/internal/model"
-	"jciyuan-spider/internal/storage"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/storage"
 )
 
 // Manager 断点续爬管理器

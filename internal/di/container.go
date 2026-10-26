@@ -5,21 +5,21 @@ import (
 	"context"
 	"fmt"
 
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/logger"
-	"jciyuan-spider/internal/metrics"
-	"jciyuan-spider/internal/model"
-	"jciyuan-spider/internal/parser"
-	"jciyuan-spider/internal/resume"
-	"jciyuan-spider/internal/spider"
-	"jciyuan-spider/internal/storage"
-	"jciyuan-spider/internal/worker"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/logger"
+	"github.com/xfengyin/jciyuan-spider/internal/metrics"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/parser"
+	"github.com/xfengyin/jciyuan-spider/internal/resume"
+	"github.com/xfengyin/jciyuan-spider/internal/spider"
+	"github.com/xfengyin/jciyuan-spider/internal/storage"
+	"github.com/xfengyin/jciyuan-spider/internal/worker"
 
 	// 触发各插件的 init 注册
-	_ "jciyuan-spider/internal/fetcher/http"
-	_ "jciyuan-spider/internal/parser/html"
-	_ "jciyuan-spider/internal/storage/json"
-	memorystorage "jciyuan-spider/internal/storage/memory"
+	_ "github.com/xfengyin/jciyuan-spider/internal/fetcher/http"
+	_ "github.com/xfengyin/jciyuan-spider/internal/parser/html"
+	_ "github.com/xfengyin/jciyuan-spider/internal/storage/json"
+	memorystorage "github.com/xfengyin/jciyuan-spider/internal/storage/memory"
 )
 
 // Container 依赖注入容器

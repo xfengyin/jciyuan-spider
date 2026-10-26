@@ -8,9 +8,9 @@ import (
 	"math/rand"
 	"time"
 
-	spidererrors "jciyuan-spider/internal/errors"
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/metrics"
+	spidererrors "github.com/xfengyin/jciyuan-spider/internal/errors"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/metrics"
 )
 
 // isContextError 判断错误是否由上下文取消/超时产生。

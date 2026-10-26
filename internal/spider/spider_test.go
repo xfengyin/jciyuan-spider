@@ -8,12 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/mocks"
-	"jciyuan-spider/internal/model"
-	"jciyuan-spider/internal/parser"
-	"jciyuan-spider/internal/resume"
-	"jciyuan-spider/internal/worker"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/mocks"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/parser"
+	"github.com/xfengyin/jciyuan-spider/internal/resume"
+	"github.com/xfengyin/jciyuan-spider/internal/worker"
 )
 
 // testConfig 返回一个最小可用的 Spider 配置。

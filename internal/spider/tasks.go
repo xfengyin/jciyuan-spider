@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"sync"
 
-	"jciyuan-spider/internal/fetcher"
-	"jciyuan-spider/internal/logger"
-	"jciyuan-spider/internal/model"
-	"jciyuan-spider/internal/worker"
+	"github.com/xfengyin/jciyuan-spider/internal/fetcher"
+	"github.com/xfengyin/jciyuan-spider/internal/logger"
+	"github.com/xfengyin/jciyuan-spider/internal/model"
+	"github.com/xfengyin/jciyuan-spider/internal/worker"
 )
 
 // crawlDetails 并发调度详情页任务并收集结果。

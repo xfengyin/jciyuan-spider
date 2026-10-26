@@ -49,7 +49,7 @@ import (
 	"io"
 	"net/http"
 
-	"jciyuan-spider/crawler"
+	"github.com/xfengyin/jciyuan-spider/crawler"
 )
 
 type myCrawler struct{}

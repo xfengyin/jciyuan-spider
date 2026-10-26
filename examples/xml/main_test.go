@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"jciyuan-spider/crawler"
+	"github.com/xfengyin/jciyuan-spider/crawler"
 )
 
 const atomSample = `<?xml version="1.0" encoding="utf-8"?>
