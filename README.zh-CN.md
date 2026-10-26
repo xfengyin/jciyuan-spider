@@ -11,7 +11,7 @@
 
 **jciyuan-spider** 是一个轻量通用的 Go 爬虫框架：定义 `Crawler` 接口（`Fetch → Parse → Extract`），
 由通用 `Engine` 统一调度并发、重试、限速与结果输出。任何站点/数据源只需实现该接口即可接入框架；
-仓库内置的企业级组件（Fetcher 中间件链、配置驱动 HTML 解析器、多存储后端）作为参考实现，
+仓库内置的企业级组件（Fetcher 中间件链、配置驱动 HTML 解析器、可插拔存储后端）作为参考实现，
 原有 [jciyuan.com](https://www.jciyuan.com) 动漫爬虫保留为 [Example](#examples-示例)。
 
 > M1 里程碑：从「单一站点爬虫」转型为「通用爬虫框架」——新增公开框架包 [`crawler/`](crawler)，原功能保持可用。
@@ -44,8 +44,8 @@
 | ⚙️ **通用 Engine** | 并发 Worker、失败重试、请求间隔限速、超时控制、JSON Lines 输出 |
 | 🔌 **SPI 注册机制** | `crawler.Register` / `crawler.Build`，按名称装配爬虫实现 |
 | 🎯 **示例开箱即用** | [`examples/demo`](examples/demo)、[`examples/jciyuan`](examples/jciyuan)、[`examples/rss`](examples/rss) |
-| 🧱 **企业级组件（内部）** | Fetcher 中间件链（trace/metrics/限流/重试/熔断/代理轮换）、抗反爬、多存储后端 |
-| 📦 **多存储后端** | JSON（默认）、SQLite、MySQL、S3，外加内存缓存装饰器 |
+| 🧱 **企业级组件（内部）** | Fetcher 中间件链（trace/metrics/限流/重试/熔断/代理轮换）、抗反爬、可插拔存储后端 |
+| 📦 **存储后端** | JSON（默认）+ 内存缓存装饰器；经 SPI 可扩展 |
 | 🔄 **断点续爬** | 爬取状态持久化，中断后可恢复；支持增量合并保留已抓取的 M3U8 |
 | 📊 **可观测性** | 内存 / Prometheus 指标、/healthz 健康检查、traceId 全链路日志 |
 

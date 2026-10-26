@@ -119,7 +119,7 @@ crawl:           # anime_id、resume、incremental、max_episodes
 fetcher:         # HTTP 传输参数、代理策略
 anticrawler:     # random_ua、referer_policy、robots_txt_check
 parser:          # html 编码 + extractors（配置驱动的字段提取）
-storage:         # type: json|sqlite|mysql|s3，output 开关（save_json/save_m3u8/save_raw_html）
+storage:         # type: json（内置），output 开关（save_json/save_m3u8/save_raw_html）
 middlewares:     # 中间件链及顺序
 metrics:         # memory|prometheus（prometheus 时暴露 /metrics 与 /healthz）
 log:             # 级别、格式、文件轮转

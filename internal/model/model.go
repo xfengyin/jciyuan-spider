@@ -184,11 +184,8 @@ type ProcessorConfig struct {
 
 // StorageConfig Storage 插件配置
 type StorageConfig struct {
-	Type   string              `yaml:"type"` // json | sqlite | mysql | s3
+	Type   string              `yaml:"type"` // json（内置；memory 为缓存装饰器）
 	JSON   JSONStorageConfig   `yaml:"json"`
-	SQLite SQLiteStorageConfig `yaml:"sqlite"`
-	MySQL  MySQLStorageConfig  `yaml:"mysql"`
-	S3     S3StorageConfig     `yaml:"s3"`
 	Memory MemoryStorageConfig `yaml:"memory"`
 	Output OutputConfig        `yaml:"output"`
 }
@@ -196,26 +193,6 @@ type StorageConfig struct {
 // JSONStorageConfig JSON 存储配置
 type JSONStorageConfig struct {
 	OutputDir string `yaml:"output_dir"`
-}
-
-// SQLiteStorageConfig SQLite 存储配置
-type SQLiteStorageConfig struct {
-	DSN string `yaml:"dsn"`
-}
-
-// MySQLStorageConfig MySQL 存储配置
-type MySQLStorageConfig struct {
-	DSN string `yaml:"dsn"`
-}
-
-// S3StorageConfig S3 对象存储配置
-type S3StorageConfig struct {
-	Endpoint        string `yaml:"endpoint"`
-	Region          string `yaml:"region"`
-	Bucket          string `yaml:"bucket"`
-	KeyPrefix       string `yaml:"key_prefix"`
-	AccessKeyID     string `yaml:"access_key_id"`
-	SecretAccessKey string `yaml:"secret_access_key"`
 }
 
 // MemoryStorageConfig 内存缓存装饰器配置
@@ -227,7 +204,6 @@ type MemoryStorageConfig struct {
 // OutputConfig 输出开关配置
 type OutputConfig struct {
 	SaveJSON    bool `yaml:"save_json"`
-	SaveSQLite  bool `yaml:"save_sqlite"`
 	SaveM3U8    bool `yaml:"save_m3u8"`
 	SaveRawHTML bool `yaml:"save_raw_html"`
 }

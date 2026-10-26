@@ -1,4 +1,5 @@
-// Package storage 定义数据持久化抽象与 SPI 注册机制，支持 JSON/SQLite/MySQL/S3 等多种后端。
+// Package storage 定义数据持久化抽象与 SPI 注册机制：内置 JSON 后端与 memory 缓存装饰器，
+// 其他后端可通过 Register 自行扩展。
 package storage
 
 import (

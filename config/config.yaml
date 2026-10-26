@@ -69,11 +69,8 @@ storage:
   type: json
   json:
     output_dir: "./output"
-  sqlite:
-    dsn: "./data/spider.db"
   output:
     save_json: true
-    save_sqlite: false
     save_m3u8: false
     save_raw_html: false
 

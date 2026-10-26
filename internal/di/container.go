@@ -20,9 +20,6 @@ import (
 	_ "jciyuan-spider/internal/parser/html"
 	_ "jciyuan-spider/internal/storage/json"
 	memorystorage "jciyuan-spider/internal/storage/memory"
-	_ "jciyuan-spider/internal/storage/mysql"
-	_ "jciyuan-spider/internal/storage/s3"
-	_ "jciyuan-spider/internal/storage/sqlite"
 )
 
 // Container 依赖注入容器

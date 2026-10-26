@@ -93,7 +93,7 @@ page, err := crawler.NewHTTPFetcher(crawler.HTTPOptions{
 |----|------|
 | `internal/fetcher` | Fetcher 接口 + SPI；`http` 实现（连接池/白名单/robots/UA/gzip）；`middleware`（trace/metrics/logging/rate_limit/retry/circuit_breaker/proxy_rotate） |
 | `internal/parser` | Parser 接口 + SPI；`extractor`（CSS/XPath/Regex）、`processor`（clean_text/trim/split/lower 等）、`html` 配置驱动 Pipeline |
-| `internal/storage` | Storage 接口 + SPI：json / sqlite / mysql / s3 / memory 缓存装饰器 |
+| `internal/storage` | Storage 接口 + SPI：json / memory 缓存装饰器（mysql / s3 / sqlite 三个从未被配置的后端已删除） |
 | `internal/spider` | 核心编排：任务调度、状态机、增量合并、M3U8 抓取 |
 | `internal/worker` | goroutine 池；`internal/resume` 断点续爬；`internal/metrics`、`internal/health`、`internal/logger`、`internal/di` 等 |
 
