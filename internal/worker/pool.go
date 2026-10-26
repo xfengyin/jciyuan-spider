@@ -1,12 +1,10 @@
-// Package worker 提供基于信号量的并发 WorkerPool，支持优雅关闭、上下文取消与任务 panic 恢复。
+// Package worker 提供固定 goroutine 数的并发 WorkerPool，支持优雅关闭、上下文取消与任务 panic 恢复。
 package worker
 
 import (
 	"context"
 	"fmt"
 	"sync"
-
-	"golang.org/x/sync/semaphore"
 )
 
 // Task 是 WorkerPool 执行的任务单元。
@@ -27,7 +25,6 @@ func (f TaskFunc) Execute(ctx context.Context) error {
 type Pool struct {
 	workers   int
 	queue     chan Task
-	sem       *semaphore.Weighted
 	wg        sync.WaitGroup
 	ctx       context.Context
 	cancel    context.CancelFunc
@@ -47,7 +44,6 @@ func NewPool(workers, queueSize int) *Pool {
 	return &Pool{
 		workers: workers,
 		queue:   make(chan Task, queueSize),
-		sem:     semaphore.NewWeighted(int64(workers)),
 	}
 }
 
@@ -104,12 +100,12 @@ func (p *Pool) loop() {
 			if !ok {
 				return
 			}
-			// 使用信号量控制并发。
-			if err := p.sem.Acquire(p.ctx, 1); err != nil {
+			// 并发上限由「workers 个 goroutine」本身保证，不需要额外信号量。
+			// 这里只保留原来 Acquire 的另一个作用：池已取消时不再启动队列里的下一个任务。
+			if p.ctx.Err() != nil {
 				return
 			}
 			p.runTask(task)
-			p.sem.Release(1)
 		}
 	}
 }
